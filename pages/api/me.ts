@@ -16,6 +16,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data | ErrorResponse>
 ) {
+  // req.method === "GET"のように、リクエストのメソッドごとに処理を分岐することも可能
   const session = await getServerSession(req, res, authOptions);
 
   if (!session) {
