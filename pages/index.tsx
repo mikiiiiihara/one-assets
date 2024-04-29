@@ -1,5 +1,5 @@
 import ProtectedPage from "@frontend/ layouts/protected-page";
-import { Top } from "@frontend/components/organisms/top";
+import Top from "@frontend/components/organisms/top";
 import useUser from "@frontend/hooks/userUser";
 import { signOut } from "next-auth/react";
 

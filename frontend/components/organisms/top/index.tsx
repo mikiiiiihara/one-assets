@@ -6,7 +6,7 @@ export type Props = {
   signOut: () => void;
 };
 
-const Component: React.FC<Props> = ({ name, signOut }) => {
+const Top: React.FC<Props> = ({ name, signOut }) => {
   return (
     <>
       <p className="font-bold">Welcome {name}!</p>
@@ -17,5 +17,4 @@ const Component: React.FC<Props> = ({ name, signOut }) => {
   );
 };
 
-Component.displayName = "Top";
-export const Top = React.memo(Component);
+export default Top;
