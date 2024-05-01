@@ -1,4 +1,4 @@
-import { User } from "models/user";
+import { User } from "@backend/services/user/user";
 import { useState, useEffect } from "react";
 import useFetchAPI from "./useFetchApi";
 
