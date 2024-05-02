@@ -4,7 +4,7 @@ import { UserModel } from "./user.model";
 /**
  * Fetch user by id
  */
-export const findById = async (id: string): Promise<UserModel> => {
+export const Get = async (id: string): Promise<UserModel> => {
   // Fetch user from DB
   const user = await prismaClient.user.findUnique({
     where: { id },

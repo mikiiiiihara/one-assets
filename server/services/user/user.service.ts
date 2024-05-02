@@ -1,8 +1,8 @@
-import { findById } from "@server/repositories/user/user.repository";
+import { Get } from "@server/repositories/user/user.repository";
 
 /**
  * Fetch user by id
  */
 export const userById = async (id: string) => {
-  return await findById(id);
+  return await Get(id);
 };

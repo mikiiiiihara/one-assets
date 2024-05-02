@@ -23,7 +23,6 @@ export default async function handler(
     res.status(401).json({ message: "You must be logged in." });
     return;
   }
-  // Fetch user from DB
   const user = await userById(session.user.id);
   return res.json(user);
 }

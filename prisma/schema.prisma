@@ -75,3 +75,15 @@ model Authenticator {
  
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model UsStock {
+  id                String  @id @default(cuid())
+  code              String
+  getPrice          Float
+  quantity          Int
+  sector            String
+  usdjpy            Float
+  userId            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

@@ -1,5 +1,5 @@
 import * as PrismaClient from "@server/lib/prisma-client";
-import { findById } from "./user.repository";
+import { Get } from "./user.repository";
 
 // モックのセットアップを行う
 jest.mock("@server/lib/prisma-client", () => ({
@@ -17,7 +17,7 @@ const mockFindUnique = PrismaClient.default.user
   typeof PrismaClient.default.user.findUnique
 >;
 
-describe("findById", () => {
+describe("Get", () => {
   // 各テストの前にモックをリセットする
   beforeEach(() => {
     mockFindUnique.mockReset();
@@ -41,12 +41,12 @@ describe("findById", () => {
 
     mockFindUnique.mockResolvedValue(mockUser);
 
-    const result = await findById("1");
+    const result = await Get("1");
     expect(result).toEqual({ name: "John Doe", email: "john@example.com" });
   });
 
   it("should throw an error if user does not exist", async () => {
     mockFindUnique.mockResolvedValue(null);
-    await expect(findById("999")).rejects.toThrow("User not found");
+    await expect(Get("999")).rejects.toThrow("User not found");
   });
 });
