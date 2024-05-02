@@ -1,6 +1,6 @@
-import { User } from "@backend/services/user/user";
 import { useState, useEffect } from "react";
 import useFetchAPI from "./useFetchApi";
+import { User } from "@prisma/client";
 
 const useUser = () => {
   const [user, setUser] = useState<User | null>(null);

@@ -17,7 +17,7 @@
     "baseUrl": ".", // ベースURLをプロジェクトのルートに設定
     "paths": {
       "@frontend/*": ["frontend/*"],
-      "@backend/*": ["backend/*"]
+      "@server/*": ["server/*"]
     }
   },
   "include": [

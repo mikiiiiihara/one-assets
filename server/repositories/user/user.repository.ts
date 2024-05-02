@@ -1,4 +1,4 @@
-import prismaClient from "@backend/lib/prisma-client";
+import prismaClient from "@server/lib/prisma-client";
 import { UserModel } from "./user.model";
 
 /**

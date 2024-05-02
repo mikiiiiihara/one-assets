@@ -4,7 +4,7 @@ module.exports = {
   moduleNameMapper: {
     // Next.jsのCSSモジュールのモッキング
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
-    "^@backend/(.*)$": "<rootDir>/backend/$1",
+    "^@server/(.*)$": "<rootDir>/server/$1",
     "^@frontend/(.*)$": "<rootDir>/frontend/$1",
   },
 };

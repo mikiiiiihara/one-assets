@@ -1,8 +1,8 @@
-import * as PrismaClient from "@backend/lib/prisma-client";
+import * as PrismaClient from "@server/lib/prisma-client";
 import { findById } from "./user.repository";
 
 // モックのセットアップを行う
-jest.mock("@backend/lib/prisma-client", () => ({
+jest.mock("@server/lib/prisma-client", () => ({
   __esModule: true, // ESModuleとして扱うために必要
   default: {
     user: {

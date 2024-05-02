@@ -1,8 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
-import { userById } from "@backend/services/user/user.service";
 import { authOptions } from "./auth/[...nextauth]";
+import { userById } from "@server/services/user/user.service";
 type Data = {
   name?: string;
   email?: string;

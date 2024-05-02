@@ -1,4 +1,4 @@
-import { findById } from "@backend/repositories/user/user.repository";
+import { findById } from "@server/repositories/user/user.repository";
 
 /**
  * Fetch user by id
