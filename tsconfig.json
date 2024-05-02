@@ -16,7 +16,7 @@
     "incremental": true,
     "baseUrl": ".", // ベースURLをプロジェクトのルートに設定
     "paths": {
-      "@frontend/*": ["frontend/*"],
+      "@hooks/*": ["hooks/*"],
       "@components/*": ["components/*"],
       "@server/*": ["server/*"]
     }

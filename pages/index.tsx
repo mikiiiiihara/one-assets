@@ -1,6 +1,6 @@
 import Top from "@components/organisms/top";
-import ProtectedPage from "@frontend/ layouts/protected-page";
-import useUser from "@frontend/hooks/useUser";
+import ProtectedPage from " layouts/protected-page";
+import useUser from "hooks/useUser";
 import { signOut } from "next-auth/react";
 
 export default function Component() {

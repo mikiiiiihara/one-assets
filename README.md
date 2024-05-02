@@ -36,6 +36,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ### Directory
 
 - server/: for api routes codes
-- frontend/: for screen component and hooks
+- hooks/: for hooks this layer is the proxy of api and screen
 - pages/: for routing of api and pages
-- models/: for types of api request and response
