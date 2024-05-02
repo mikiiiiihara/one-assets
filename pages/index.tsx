@@ -1,5 +1,5 @@
+import Top from "@components/organisms/top";
 import ProtectedPage from "@frontend/ layouts/protected-page";
-import Top from "@frontend/components/organisms/top";
 import useUser from "@frontend/hooks/useUser";
 import { signOut } from "next-auth/react";
 
@@ -11,7 +11,7 @@ export default function Component() {
   if (!user) return <div>No user found</div>;
   return (
     <ProtectedPage>
-      <Top name={user.name} signOut={signOut} />
+      <Top name={user.name ?? ""} signOut={signOut} />
     </ProtectedPage>
   );
 }

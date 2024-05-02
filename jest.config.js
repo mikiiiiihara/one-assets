@@ -6,5 +6,6 @@ module.exports = {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
     "^@server/(.*)$": "<rootDir>/server/$1",
     "^@frontend/(.*)$": "<rootDir>/frontend/$1",
+    "^@components/(.*)$": "<rootDir>/components/$1",
   },
 };

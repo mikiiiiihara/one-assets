@@ -17,6 +17,7 @@
     "baseUrl": ".", // ベースURLをプロジェクトのルートに設定
     "paths": {
       "@frontend/*": ["frontend/*"],
+      "@components/*": ["components/*"],
       "@server/*": ["server/*"]
     }
   },

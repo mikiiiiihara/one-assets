@@ -1,4 +1,4 @@
-import { Login } from "@frontend/components/organisms/login";
+import { Login } from "@components/organisms/login";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
