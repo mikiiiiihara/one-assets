@@ -41,7 +41,7 @@ export type UsStockModel = {
   dividends: Dividend[];
 };
 
-type Dividend = {
+export type Dividend = {
   /**
    * 配当権利落日
    */
