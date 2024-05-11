@@ -15,6 +15,9 @@ export const summarizeAllAssets = (
       case "usStock":
         value = calculateUsStock(asset[i], fx);
         break;
+      case "japanStock":
+        value = calculateJapanStock(asset[i]);
+        break;
       case "japanFund":
         value = calculateJapanFund(asset[i]);
         break;
@@ -58,6 +61,45 @@ const calculateUsStock = (asset: Asset, fx: number): Detail => {
   //   const dividend = dividends * fx;
   const dividend = 0;
   const sumOfDividend = quantity * (dividend * 0.71);
+  const sumOfGetPrice = Math.round(quantity * getPrice * 10) / 10;
+  const sumOfPrice = Math.round(quantity * price * 10) / 10;
+  return {
+    id,
+    code,
+    name,
+    quantity,
+    getPrice,
+    price,
+    priceGets,
+    priceRate,
+    dividend,
+    sumOfDividend: Math.round(sumOfDividend * 100) / 100,
+    dividendRate: Math.round(((dividend * 0.71 * 100) / getPrice) * 100) / 100,
+    sector,
+    usdJpy,
+    sumOfGetPrice,
+    sumOfPrice,
+    balance: Math.round((quantity * price - quantity * getPrice) * 10) / 10,
+    balanceRate:
+      Math.round(
+        ((quantity * price - quantity * getPrice) / (quantity * getPrice)) *
+          100 *
+          10
+      ) / 10,
+  };
+};
+
+// 日本株式のサマリーを計算
+const calculateJapanStock = (asset: Asset): Detail => {
+  const { id, usdJpy, code, name, quantity, priceGets, sector, dividends } =
+    asset;
+  const getPrice = asset.getPrice;
+  const price = asset.currentPrice;
+  const priceRate = asset.currentRate;
+  // TODO: 配当金額を計算
+  //   const dividend = dividends * fx;
+  const dividend = 0;
+  const sumOfDividend = quantity * (dividend * 0.8);
   const sumOfGetPrice = Math.round(quantity * getPrice * 10) / 10;
   const sumOfPrice = Math.round(quantity * price * 10) / 10;
   return {

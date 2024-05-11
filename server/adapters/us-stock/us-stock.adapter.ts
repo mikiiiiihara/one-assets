@@ -36,7 +36,7 @@ export const fetchUsStockDividend = async (
   } catch (error: any) {
     if (error.response?.status === 429) {
       console.log("Rate limit exceeded, retrying with a different token...");
-      const newToken = process.env.TOCK_API_DIVIDEND_TOKEN_SUB; // 代替のAPIキートークン
+      const newToken = process.env.STOCK_API_DIVIDEND_TOKEN_SUB; // 代替のAPIキートークン
       try {
         const response = await axiosClient.get<UsStockDividend>(
           `${baseUrl}/v3/historical-price-full/stock_dividend/${code}?apikey=${newToken}`

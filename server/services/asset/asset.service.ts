@@ -1,6 +1,7 @@
 import { List as UsStockList } from "@server/repositories/stock/us/us-stock.repository";
 import { Asset } from "./asset";
 import { List as JapanFundList } from "@server/repositories/japan-fund/japan-fund.repository";
+import { List as JapanStockList } from "@server/repositories/stock/jp/japan-stock.repository";
 
 export const getAssets = async (userId: string): Promise<Asset[]> => {
   const assets: Asset[] = [];
@@ -24,6 +25,24 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
     });
   });
   // 日本株式
+  const japanStocks = await JapanStockList(userId);
+  japanStocks.forEach((japanStock) => {
+    assets.push({
+      code: japanStock.code,
+      name: japanStock.name,
+      currentPrice: japanStock.currentPrice,
+      currentRate: 0,
+      dividends: [],
+      getPrice: japanStock.getPrice,
+      getPriceTotal: japanStock.getPrice * japanStock.quantity,
+      id: parseInt(japanStock.id),
+      priceGets: 0,
+      quantity: japanStock.quantity,
+      sector: "japanStock",
+      usdJpy: 0,
+      group: "japanStock",
+    });
+  });
   // 日本投資信託
   const japanFunds = await JapanFundList(userId);
   japanFunds.forEach((japanFund) => {
