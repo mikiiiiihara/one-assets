@@ -24,7 +24,34 @@ export type UsStockModel = {
    */
   usdjpy: number;
   /**
-   * 保有ユーザーのID
+   * 現在価格
    */
-  userId: string;
+  currentPrice: number;
+  /**
+   * 変化額
+   */
+  priceGets: number;
+  /**
+   * 変化率
+   */
+  currentRate: number;
+  /**
+   * １年当たり配当
+   */
+  dividends: Dividend[];
+};
+
+type Dividend = {
+  /**
+   * 配当権利落日
+   */
+  fixedDate: Date;
+  /**
+   * 配当支払日
+   */
+  paymentDate: Date;
+  /**
+   * 配当金額
+   */
+  price: number;
 };
