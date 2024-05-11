@@ -2,6 +2,7 @@ import { List as UsStockList } from "@server/repositories/stock/us/us-stock.repo
 import { Asset } from "./asset";
 import { List as JapanFundList } from "@server/repositories/japan-fund/japan-fund.repository";
 import { List as JapanStockList } from "@server/repositories/stock/jp/japan-stock.repository";
+import { List as FixedIncomeAssetList } from "@server/repositories/fixed-income-asset/fixed-income-asset.repository";
 
 export const getAssets = async (userId: string): Promise<Asset[]> => {
   const assets: Asset[] = [];
@@ -64,6 +65,24 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
   });
   //　仮想通貨
   // 固定利回り資産
+  const fixedIncomeAssets = await FixedIncomeAssetList(userId);
+  fixedIncomeAssets.forEach((fixedIncomeAsset) => {
+    assets.push({
+      code: fixedIncomeAsset.code,
+      name: fixedIncomeAsset.code,
+      currentPrice: 0,
+      currentRate: 0,
+      dividends: [],
+      getPrice: 0,
+      getPriceTotal: fixedIncomeAsset.getPriceTotal,
+      id: parseInt(fixedIncomeAsset.id),
+      priceGets: 0,
+      quantity: 1,
+      sector: "fixedIncomeAsset",
+      usdJpy: fixedIncomeAsset.usdjpy,
+      group: "fixedIncomeAsset",
+    });
+  });
   // 現金
   return assets;
 };

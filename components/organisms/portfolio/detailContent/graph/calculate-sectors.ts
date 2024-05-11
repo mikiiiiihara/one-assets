@@ -25,7 +25,7 @@ export const calculateSectors = (details: Detail[]): PieData[] => {
   for (let data of sectorData) {
     const pieData: PieData = {
       name: data.sector,
-      y: data.amount,
+      y: Math.round(data.amount * 10) / 10,
     };
     result.push(pieData);
   }
