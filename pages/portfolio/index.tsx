@@ -4,6 +4,7 @@ import useUser from "hooks/useUser";
 import { signOut } from "next-auth/react";
 import useAssets from "@hooks/useAssets";
 import useCurrentUsdJpy from "@hooks/useCurrentUsdJpy";
+import Portfolio from "@components/organisms/portfolio";
 
 export default function Component() {
   const { user, isLoading, error } = useUser();
@@ -22,11 +23,10 @@ export default function Component() {
     return <div>Loading...</div>;
   if (error || UsdJpyError || AssetsError) return <div>Error: {error}</div>;
   if (!user) return <div>No user found</div>;
-  console.log("currentUsdJpy:", currentUsdJpy);
-  console.log("assets", assets);
   return (
     <ProtectedPage>
       <Top name={user.name ?? ""} signOut={signOut} />
+      <Portfolio assets={assets} currentUsdJpy={currentUsdJpy} />
     </ProtectedPage>
   );
 }

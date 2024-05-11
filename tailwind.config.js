@@ -27,6 +27,12 @@ module.exports = {
           900: "#6D6131", // 最も暗いバリエーション
           DEFAULT: "#D6C060", // プライマリカラーのデフォルト値
         },
+        plus: {
+          DEFAULT: "#3CB371",
+        },
+        minus: {
+          DEFAULT: "#FF3333",
+        },
       },
     },
   },

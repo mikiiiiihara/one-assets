@@ -19,7 +19,7 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
       quantity: usStock.quantity,
       sector: usStock.sector,
       usdJpy: usStock.usdjpy,
-      group: "米国株式",
+      group: "usStock",
     });
   });
   return assets;
