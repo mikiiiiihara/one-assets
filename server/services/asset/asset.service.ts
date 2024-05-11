@@ -3,6 +3,7 @@ import { Asset } from "./asset";
 import { List as JapanFundList } from "@server/repositories/japan-fund/japan-fund.repository";
 import { List as JapanStockList } from "@server/repositories/stock/jp/japan-stock.repository";
 import { List as FixedIncomeAssetList } from "@server/repositories/fixed-income-asset/fixed-income-asset.repository";
+import { List as CashList } from "@server/repositories/cash/cash.repository";
 
 export const getAssets = async (userId: string): Promise<Asset[]> => {
   const assets: Asset[] = [];
@@ -84,5 +85,23 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
     });
   });
   // 現金
+  const cashes = await CashList(userId);
+  cashes.forEach((cash) => {
+    assets.push({
+      code: cash.name,
+      name: cash.name,
+      currentPrice: 0,
+      currentRate: 0,
+      dividends: [],
+      getPrice: 0,
+      getPriceTotal: cash.price,
+      id: parseInt(cash.id),
+      priceGets: 0,
+      quantity: 1,
+      sector: cash.sector,
+      usdJpy: 1,
+      group: "cash",
+    });
+  });
   return assets;
 };

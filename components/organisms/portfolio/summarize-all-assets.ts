@@ -24,8 +24,11 @@ export const summarizeAllAssets = (
       case "crypto":
         value = calculateCryptos(asset[i]);
         break;
-      default:
+      case "fixedIncomeAsset":
         value = calculateFixedIncomeAsset(asset[i]);
+        break;
+      default:
+        value = calculateCash(asset[i], fx);
     }
     const { sumOfGetPrice, sumOfPrice, sumOfDividend } = value;
     // 合計値に加算
@@ -240,6 +243,44 @@ const calculateFixedIncomeAsset = (asset: Asset): Detail => {
     usdJpy,
     sumOfGetPrice: getPriceTotal,
     sumOfPrice: getPriceTotal,
+    balance: 0,
+    balanceRate: 0,
+  };
+};
+
+// 現金のサマリーを計算
+const calculateCash = (asset: Asset, fx: number): Detail => {
+  const {
+    id,
+    usdJpy,
+    code,
+    name,
+    quantity,
+    priceGets,
+    sector,
+    getPrice,
+    getPriceTotal,
+    currentPrice,
+    dividends,
+  } = asset;
+  const priceRate = asset.currentRate;
+  const sumOfDividend = 0;
+  return {
+    id,
+    code,
+    name,
+    quantity,
+    getPrice,
+    price: currentPrice,
+    priceGets,
+    priceRate,
+    dividend: 0,
+    sumOfDividend,
+    dividendRate: 0,
+    sector,
+    usdJpy,
+    sumOfGetPrice: sector == "JPY" ? getPriceTotal : getPriceTotal * fx,
+    sumOfPrice: sector == "JPY" ? getPriceTotal : getPriceTotal * fx,
     balance: 0,
     balanceRate: 0,
   };
