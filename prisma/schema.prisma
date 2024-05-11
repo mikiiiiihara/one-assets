@@ -87,3 +87,66 @@ model UsStock {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
+
+model JapanStock {
+  id                String  @id @default(cuid())
+  code              String
+  getPrice          Float
+  quantity          Int
+  sector            String
+  userId            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model JapanFund {
+  id                String  @id @default(cuid())
+  name              String
+  code              String
+  getPriceTotal     Float
+  getPrice          Float
+  userId            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Crypto {
+  id                String  @id @default(cuid())
+  code              String
+  getPrice          Float
+  quantity          Float
+  userId            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model FixedIncomeAsset {
+  id                String  @id @default(cuid())
+  code              String
+  getPriceTotal     Float
+  dividendRate      Float
+  usdjpy            Float
+  paymentMonth      Int[]
+  userId            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model JapanFundPrice {
+  id                String  @id @default(cuid())
+  name              String
+  code              String
+  price             Float
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model JapanStockPrice {
+  id                String  @id @default(cuid())
+  name              String
+  code              String
+  price             Float
+  dividend          Float
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
