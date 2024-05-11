@@ -7,7 +7,7 @@ export const calculateTickerPie = (details: Detail[]): PieData[] => {
   for (let data of details) {
     const yData = data.sumOfPrice;
     const value = {
-      name: truncateString(data.code),
+      name: truncateString(data.name),
       y: Math.round(yData * 10) / 10,
     };
     graphData.push(value);

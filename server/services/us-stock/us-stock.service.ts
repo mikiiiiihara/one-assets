@@ -1,4 +1,4 @@
-import { CreateUsStockInput } from "@server/repositories/stock/input/input";
+import { CreateUsStockInput } from "@server/repositories/stock/us/input";
 import { UsStockModel } from "@server/repositories/stock/us/us-stock.model";
 import {
   Create,

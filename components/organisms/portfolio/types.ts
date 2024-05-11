@@ -1,6 +1,7 @@
 export type Detail = {
   id: number;
   code: string;
+  name: string;
   quantity: number;
   getPrice: number;
   price: number;

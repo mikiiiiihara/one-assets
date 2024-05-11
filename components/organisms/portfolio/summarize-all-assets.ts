@@ -49,7 +49,8 @@ export const summarizeAllAssets = (
 
 // 米国株式のサマリーを計算
 const calculateUsStock = (asset: Asset, fx: number): Detail => {
-  const { id, usdJpy, code, quantity, priceGets, sector, dividends } = asset;
+  const { id, usdJpy, code, name, quantity, priceGets, sector, dividends } =
+    asset;
   const getPrice = asset.getPrice * usdJpy;
   const price = asset.currentPrice * fx;
   const priceRate = asset.currentRate;
@@ -62,6 +63,7 @@ const calculateUsStock = (asset: Asset, fx: number): Detail => {
   return {
     id,
     code,
+    name,
     quantity,
     getPrice,
     price,
@@ -90,6 +92,7 @@ const calculateJapanFund = (asset: Asset): Detail => {
     id,
     usdJpy,
     code,
+    name,
     quantity,
     priceGets,
     sector,
@@ -106,6 +109,7 @@ const calculateJapanFund = (asset: Asset): Detail => {
   return {
     id,
     code,
+    name,
     quantity,
     getPrice,
     price: currentPrice,
@@ -127,7 +131,7 @@ const calculateJapanFund = (asset: Asset): Detail => {
 
 // 仮想通貨のサマリーを計算
 const calculateCryptos = (asset: Asset): Detail => {
-  const { id, code, quantity, priceGets, sector, currentPrice } = asset;
+  const { id, code, name, quantity, priceGets, sector, currentPrice } = asset;
   const getPrice = asset.getPrice;
   const priceRate = asset.currentRate;
 
@@ -137,6 +141,7 @@ const calculateCryptos = (asset: Asset): Detail => {
   return {
     id,
     code,
+    name,
     quantity,
     getPrice,
     price: currentPrice,
@@ -162,6 +167,7 @@ const calculateFixedIncomeAsset = (asset: Asset): Detail => {
     id,
     usdJpy,
     code,
+    name,
     quantity,
     priceGets,
     sector,
@@ -177,6 +183,7 @@ const calculateFixedIncomeAsset = (asset: Asset): Detail => {
   return {
     id,
     code,
+    name,
     quantity,
     getPrice,
     price: currentPrice,

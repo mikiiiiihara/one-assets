@@ -2,6 +2,7 @@ import { Dividend } from "@server/repositories/stock/us/us-stock.model";
 
 export type Asset = {
   code: string;
+  name: string;
   currentPrice: number;
   currentRate: number;
   dividends: Dividend[];

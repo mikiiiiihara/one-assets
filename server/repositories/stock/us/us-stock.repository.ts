@@ -5,7 +5,7 @@ import {
   fetchUsStockPrices,
 } from "@server/adapters/us-stock/us-stock.adapter";
 import { stringToDate } from "@server/utils/date";
-import { CreateUsStockInput } from "../input/input";
+import { CreateUsStockInput } from "./input";
 
 export const List = async (userId: string): Promise<UsStockModel[]> => {
   const stocks = await prismaClient.usStock.findMany({
