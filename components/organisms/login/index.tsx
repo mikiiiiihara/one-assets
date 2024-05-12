@@ -1,7 +1,6 @@
 import React from "react";
 import { signIn } from "next-auth/react";
 import { GoogleLoginButton } from "@components/molecules/social-login-button/google-login-button";
-import { LineLoginButton } from "@components/molecules/social-login-button/line-login-button";
 
 const Component = () => {
   return (
@@ -11,7 +10,6 @@ const Component = () => {
         onClick={() => signIn("google")}
         text="Googleでログイン"
       />
-      <LineLoginButton onClick={() => signIn("line")} text="LINEでログイン" />
     </center>
   );
 };
