@@ -49,7 +49,7 @@ const Component: FC<Props> = ({ details }) => {
   );
   return (
     <>
-      <div className="m-3">
+      <div className="m-5 flex justify-center">
         <PrimaryButton
           content="銘柄別"
           notSelected={displayMode !== DISPLAY_MODE.ticker}

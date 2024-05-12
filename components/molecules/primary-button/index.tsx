@@ -20,7 +20,7 @@ const PrimaryButtonComponent: React.FC<Props> = ({
   return (
     <Button
       className={`${
-        !notSelected ? "bg-primary" : "bg-gray-900"
+        !notSelected ? "bg-primary" : "bg-gray-800"
       } ${isForContent ? "" : undefined} ${className}`}
       onClick={onClick}
       type={type}
