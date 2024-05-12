@@ -5,6 +5,7 @@ import { signOut } from "next-auth/react";
 import useAssets from "@hooks/useAssets";
 import useCurrentUsdJpy from "@hooks/useCurrentUsdJpy";
 import Portfolio from "@components/organisms/portfolio";
+import { Loading } from "@components/atoms/loading";
 
 export default function Component() {
   const { user, isLoading, error } = useUser();
@@ -19,8 +20,7 @@ export default function Component() {
     error: AssetsError,
   } = useAssets();
 
-  if (isLoading || isUsdJpyLoading || isAssetsLoading)
-    return <div>Loading...</div>;
+  if (isLoading || isUsdJpyLoading || isAssetsLoading) return <Loading />;
   if (error || UsdJpyError || AssetsError) return <div>Error: {error}</div>;
   if (!user) return <div>No user found</div>;
   return (
