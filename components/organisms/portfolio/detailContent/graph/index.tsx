@@ -32,7 +32,7 @@ const Component: FC<Props> = ({ details }) => {
   ];
   // 画面表示
   //表示切り替え用
-  const [displayMode, setDisplayMode] = useState(DISPLAY_MODE.ticker);
+  const [displayMode, setDisplayMode] = useState(DISPLAY_MODE.sector);
   const changeDisplayToTicker = useCallback(() => {
     setDisplayMode(DISPLAY_MODE.ticker);
   }, []);

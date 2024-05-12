@@ -55,8 +55,7 @@ export const summarizeAllAssets = (
 
 // 米国株式のサマリーを計算
 const calculateUsStock = (asset: Asset, fx: number): Detail => {
-  const { id, usdJpy, code, name, quantity, priceGets, sector, dividends } =
-    asset;
+  const { id, usdJpy, code, name, quantity, priceGets, sector } = asset;
   const getPrice = asset.getPrice * usdJpy;
   const price = asset.currentPrice * fx;
   const priceRate = asset.currentRate;
@@ -94,8 +93,7 @@ const calculateUsStock = (asset: Asset, fx: number): Detail => {
 
 // 日本株式のサマリーを計算
 const calculateJapanStock = (asset: Asset): Detail => {
-  const { id, usdJpy, code, name, quantity, priceGets, sector, dividends } =
-    asset;
+  const { id, usdJpy, code, name, quantity, priceGets, sector } = asset;
   const getPrice = asset.getPrice;
   const price = asset.currentPrice;
   const priceRate = asset.currentRate;
@@ -219,7 +217,6 @@ const calculateFixedIncomeAsset = (asset: Asset): Detail => {
     getPrice,
     getPriceTotal,
     currentPrice,
-    dividends,
   } = asset;
   const priceRate = asset.currentRate;
   // TODO: 配当金額を計算
@@ -261,7 +258,6 @@ const calculateCash = (asset: Asset, fx: number): Detail => {
     getPrice,
     getPriceTotal,
     currentPrice,
-    dividends,
   } = asset;
   const priceRate = asset.currentRate;
   const sumOfDividend = 0;

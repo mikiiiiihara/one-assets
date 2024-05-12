@@ -4,6 +4,7 @@ import { List as JapanFundList } from "@server/repositories/japan-fund/japan-fun
 import { List as JapanStockList } from "@server/repositories/stock/jp/japan-stock.repository";
 import { List as FixedIncomeAssetList } from "@server/repositories/fixed-income-asset/fixed-income-asset.repository";
 import { List as CashList } from "@server/repositories/cash/cash.repository";
+import { List as CryptoList } from "@server/repositories/crypto/crypto.repository";
 
 export const getAssets = async (userId: string): Promise<Asset[]> => {
   const assets: Asset[] = [];
@@ -65,6 +66,24 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
     });
   });
   //　仮想通貨
+  const cryptos = await CryptoList(userId);
+  cryptos.forEach((crypto) => {
+    assets.push({
+      code: crypto.code,
+      name: crypto.code,
+      currentPrice: crypto.currentPrice,
+      currentRate: 0,
+      dividends: [],
+      getPrice: crypto.getPrice,
+      getPriceTotal: crypto.getPrice * crypto.quantity,
+      id: parseInt(crypto.id),
+      priceGets: 0,
+      quantity: crypto.quantity,
+      sector: "crypto",
+      usdJpy: 1,
+      group: "crypto",
+    });
+  });
   // 固定利回り資産
   const fixedIncomeAssets = await FixedIncomeAssetList(userId);
   fixedIncomeAssets.forEach((fixedIncomeAsset) => {
