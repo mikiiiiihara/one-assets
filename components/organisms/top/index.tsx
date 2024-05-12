@@ -9,9 +9,9 @@ export type Props = {
 const Top: React.FC<Props> = ({ name, signOut }) => {
   return (
     <>
-      <p className="font-bold">Welcome {name}!</p>
+      <p className="font-bold">{name}でログイン中</p>
       <Button className="bg-gray-500 text-white" onClick={() => signOut()}>
-        Sign Out
+        ログアウト
       </Button>
     </>
   );

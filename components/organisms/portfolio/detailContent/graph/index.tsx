@@ -64,7 +64,7 @@ const Component: FC<Props> = ({ details }) => {
       <MemoizedPie
         pieData={displayMode === DISPLAY_MODE.ticker ? pieData : sectorData}
         themeColor={themeDefault}
-        background="black"
+        background="#343a40"
       />
     </>
   );
