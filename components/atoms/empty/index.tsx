@@ -1,5 +1,3 @@
-import styles from "./empty.module.scss";
-
 export const Empty = () => {
   return (
     <div className="m-4">
