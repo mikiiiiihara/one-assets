@@ -9,6 +9,6 @@ export default {
 export const Default: StoryObj<Props> = {
   args: {
     name: "Alice",
-    signOut: () => alert("サインアウトしました！"),
+    signOut: () => alert("ログアウトしました！"),
   },
 };
