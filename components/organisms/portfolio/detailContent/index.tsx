@@ -26,7 +26,7 @@ const Component: FC<Props> = ({ details, assetsSummary }) => {
   );
   return (
     <>
-      <div className="m-3">
+      <div className="m-5 flex justify-center">
         <PrimaryButton
           content="ポートフォリオ"
           notSelected={displayMode !== DISPLAY_MODE.summary}

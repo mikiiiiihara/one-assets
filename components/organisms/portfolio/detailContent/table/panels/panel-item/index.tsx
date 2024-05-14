@@ -36,37 +36,43 @@ const AssetPanelItemComponent: FC<Props> = ({ data, displayType }) => {
   const balance = data.balance;
   return (
     <div className="">
-      <div
-        className="w-[90%] m-auto border p-4 rounded drop-shadow border-neutral-600"
-        onClick={changeModal}
-      >
-        <h3>{data.code}</h3>
-        <p>¥{(Math.round(data.sumOfPrice * 10) / 10).toLocaleString()}</p>
-        <p className={rate > 0 ? "text-plus" : "text-minus"}>
-          {data.sector !== "japanFund" &&
-          data.sector !== "crypto" &&
-          data.sector !== "fixedIncomeAsset" ? (
-            <>
-              {rate}
-              {displayType == "balance" ? "" : "%"}
-            </>
-          ) : (
-            <></>
-          )}
-        </p>
+      <div className="w-[90%] z-[1000] text-left mt-4 mb-4 ml-auto mr-auto border p-4 rounded drop-shadow border-neutral-600 flex justify-between items-center">
+        <div>
+          <h3 className="text-lg">{data.name}</h3>
+          <p className="text-xl">
+            ¥{(Math.round(data.sumOfPrice * 10) / 10).toLocaleString()}
+          </p>
+          <p className={rate > 0 ? "text-plus" : "text-minus"}>
+            {data.sector !== "japanFund" &&
+            data.sector !== "crypto" &&
+            data.sector !== "JPY" &&
+            data.sector !== "USD" &&
+            data.sector !== "fixedIncomeAsset" ? (
+              <>
+                {rate}
+                {displayType == "balance" ? "" : "%"}
+              </>
+            ) : (
+              <></>
+            )}
+          </p>
+        </div>
+        <p onClick={changeModal}>詳細</p>
       </div>
       <div className="">
         {modalState ? (
-          <div
-            className="w-[90%] m-auto border p-4 rounded drop-shadow border-neutral-600"
-            onClick={changeModal}
-          >
-            <div className="">
-              <div className="">
-                <p className="">{data.code}</p>
+          <div className="fixed flex inset-0 w-full h-full bg-black bg-opacity-50 z-[999] m-auto text-left	border p-8 rounded border-neutral-600">
+            <div className="h-auto w-[90%] m-auto p-8 rounded bg-[#343a40]">
+              <div className="justify-between items-center">
+                <p className="text-2xl">{data.name}</p>
+                {data.sector == "japanStock" ? (
+                  <p className="text-lg">{data.code}</p>
+                ) : (
+                  <></>
+                )}
                 {data.sector !== "fixedIncomeAsset" ? (
                   <div>
-                    <p className="">
+                    <p className="text-xl text-right">
                       ¥{(Math.round(data.price * 10) / 10).toLocaleString()}
                     </p>
                   </div>
@@ -88,51 +94,56 @@ const AssetPanelItemComponent: FC<Props> = ({ data, displayType }) => {
                   <></>
                 )}
               </div>
-              <p className="">セクター：{data.sector}</p>
-              {data.sector !== "japanFund" && data.sector !== "crypto" ? (
-                <p className="">保有株数：{data.quantity}</p>
-              ) : (
-                <></>
-              )}
-              {data.getPrice ? (
-                <p className="">
-                  取得価格：¥
-                  {(Math.round(data.getPrice * 10) / 10).toLocaleString()}
-                </p>
-              ) : (
-                <></>
-              )}
-              {data.usdJpy !== 1 ? (
-                <p className="">
-                  取得為替：¥
-                  {data.usdJpy.toLocaleString()}
-                </p>
-              ) : (
-                <></>
-              )}
-              <p className="">
-                時価総額：¥
-                {data.sumOfPrice.toLocaleString()}
-              </p>
-              <p className="">
-                損益額：
-                <span className={balance > 0 ? "text-plus" : "text-minus"}>
-                  ¥{balance.toLocaleString()}（{data.balanceRate}%）
-                </span>
-              </p>
-              {data.sector !== "japanFund" && data.sector !== "crypto" ? (
-                <>
-                  <p className="">
-                    年配当総額：¥
-                    {data.sumOfDividend.toLocaleString()}
+              <div className="mb-4 mt-4">
+                <p className="pb-1">セクター：{data.sector}</p>
+                {data.sector !== "japanFund" && data.sector !== "crypto" ? (
+                  <p className="pb-1">保有株数：{data.quantity}</p>
+                ) : (
+                  <></>
+                )}
+                {data.getPrice ? (
+                  <p className="pb-1">
+                    取得価格：¥
+                    {(Math.round(data.getPrice * 10) / 10).toLocaleString()}
                   </p>
-                  <p className="">
-                    配当利回り：{Math.round(data.dividendRate * 100) / 100}%
+                ) : (
+                  <></>
+                )}
+                {data.usdJpy !== 1 ? (
+                  <p className="pb-1">
+                    取得為替：¥
+                    {data.usdJpy.toLocaleString()}
                   </p>
-                </>
-              ) : (
-                <> </>
-              )}
+                ) : (
+                  <></>
+                )}
+                <p className="pb-1">
+                  時価総額：¥
+                  {data.sumOfPrice.toLocaleString()}
+                </p>
+                <p className="pb-1">
+                  損益額：
+                  <span className={balance > 0 ? "text-plus" : "text-minus"}>
+                    ¥{balance.toLocaleString()}（{data.balanceRate}%）
+                  </span>
+                </p>
+                {data.sector !== "japanFund" && data.sector !== "crypto" ? (
+                  <>
+                    <p className="pb-1">
+                      年配当総額：¥
+                      {data.sumOfDividend.toLocaleString()}
+                    </p>
+                    <p className="pb-1">
+                      配当利回り：{Math.round(data.dividendRate * 100) / 100}%
+                    </p>
+                  </>
+                ) : (
+                  <> </>
+                )}
+              </div>
+              <p className="text-right" onClick={changeModal}>
+                閉じる
+              </p>
             </div>
           </div>
         ) : (
