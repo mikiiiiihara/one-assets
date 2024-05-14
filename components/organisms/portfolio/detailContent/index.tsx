@@ -1,9 +1,10 @@
-import React, { FC } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { AssetsSummary, Detail } from "../types";
 import { Graph } from "./graph";
+import { PrimaryButton } from "@components/molecules/primary-button";
+import { Table } from "./table";
 
 type Props = {
-  displayMode: string;
   details: Detail[];
   assetsSummary: AssetsSummary;
 };
@@ -13,15 +14,40 @@ const DISPLAY_MODE = {
   detail: "detail",
 };
 
-const Component: FC<Props> = ({ displayMode, details, assetsSummary }) => {
+const Component: FC<Props> = ({ details, assetsSummary }) => {
+  const [displayMode, setDisplayMode] = useState(DISPLAY_MODE.summary);
+  const changeDisplayToSummary = useCallback(
+    () => setDisplayMode(DISPLAY_MODE.summary),
+    []
+  );
+  const changeDisplayToDetail = useCallback(
+    () => setDisplayMode(DISPLAY_MODE.detail),
+    []
+  );
   return (
     <>
+      <div className="m-3">
+        <PrimaryButton
+          content="ポートフォリオ"
+          notSelected={displayMode !== DISPLAY_MODE.summary}
+          onClick={changeDisplayToSummary}
+        />
+        <PrimaryButton
+          content="保有銘柄一覧"
+          notSelected={displayMode !== DISPLAY_MODE.detail}
+          onClick={changeDisplayToDetail}
+        />
+      </div>
       {/* {displayMode === DISPLAY_MODE.summary ? (
         <Summary usStockDetail={usStockDetail} />
       ) : (
         <AssetDetails usStockSummary={usStockSummary} />
       )} */}
-      <Graph details={details} />
+      {displayMode === DISPLAY_MODE.summary ? (
+        <Graph details={details} />
+      ) : (
+        <Table details={details} selectedFx="¥" />
+      )}
     </>
   );
 };

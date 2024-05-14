@@ -113,11 +113,7 @@ const Portfolio: React.FC<Props> = ({ assets, currentUsdJpy }) => {
         <p>一年あたり配当総額：¥{dividendTotal.toLocaleString()}</p>
         {renderCheckboxes()}
         {details.length > 0 ? (
-          <DetailContent
-            details={details}
-            assetsSummary={assetsSummary}
-            displayMode="summary"
-          />
+          <DetailContent details={details} assetsSummary={assetsSummary} />
         ) : (
           <Empty />
         )}
