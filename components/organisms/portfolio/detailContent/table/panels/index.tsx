@@ -16,7 +16,7 @@ const AssetPanelComponent: FC<Props> = ({
   return (
     <div>
       {assetDetails.map((assets) => (
-        <div key={assets.code}>
+        <div key={assets.id}>
           <AssetPanelItem
             data={assets}
             currency={currency}

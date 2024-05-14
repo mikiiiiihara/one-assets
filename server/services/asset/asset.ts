@@ -8,7 +8,7 @@ export type Asset = {
   dividends: Dividend[];
   getPrice: number;
   getPriceTotal: number;
-  id: number;
+  id: string;
   priceGets: number;
   quantity: number;
   sector: string;

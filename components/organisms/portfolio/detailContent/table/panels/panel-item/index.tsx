@@ -21,7 +21,6 @@ const AssetPanelItemComponent: FC<Props> = ({ data, displayType }) => {
   const changeModal = () => {
     setModalState(!modalState);
   };
-  console.log(data);
   //表示する項目
   let rate = Math.round(data.priceRate * 100) / 100;
   switch (displayType) {
@@ -117,7 +116,7 @@ const AssetPanelItemComponent: FC<Props> = ({ data, displayType }) => {
               </p>
               <p className="">
                 損益額：
-                <span className={balance > 0 ? "text-success" : "text-danger"}>
+                <span className={balance > 0 ? "text-plus" : "text-minus"}>
                   ¥{balance.toLocaleString()}（{data.balanceRate}%）
                 </span>
               </p>

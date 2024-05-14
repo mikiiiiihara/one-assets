@@ -22,8 +22,6 @@ export default function Component() {
   if (isLoading || isUsdJpyLoading || isAssetsLoading) return <Loading />;
   if (error || UsdJpyError || AssetsError) return <div>Error: {error}</div>;
   if (!user) return <div>No user found</div>;
-  console.log("currentUsdJpy:", currentUsdJpy);
-  console.log("assets", assets);
   return (
     <ProtectedPage>
       <Top name={user.name ?? ""} signOut={signOut} />
