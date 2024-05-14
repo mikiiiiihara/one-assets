@@ -1,5 +1,5 @@
 export type Detail = {
-  id: number;
+  id: string;
   code: string;
   name: string;
   quantity: number;
