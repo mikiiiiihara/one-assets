@@ -81,7 +81,7 @@ const AssetPanelItemComponent: FC<Props> = ({ data, displayType }) => {
                 {data.sector !== "japanFund" &&
                 data.sector !== "crypto" &&
                 data.sector !== "fixedIncomeAsset" ? (
-                  <p className={rate > 0 ? "text-success" : "text-danger"}>
+                  <p className={rate > 0 ? "text-plus" : "text-minus"}>
                     {rate}
                     {displayType == "balance" ? "" : "%"}
                   </p>
