@@ -1,5 +1,5 @@
 import prismaClient from "@server/lib/prisma-client";
-import { CreateCashInput } from "./input";
+import { CreateCashInput, UpdateCashInput } from "./input";
 import { CashModel } from "./cash.model";
 
 export const List = async (userId: string): Promise<CashModel[]> => {
@@ -37,4 +37,22 @@ export const Create = async (data: CreateCashInput): Promise<CashModel> => {
   });
 
   return newCash;
+};
+
+export const Update = async (input: UpdateCashInput): Promise<CashModel> => {
+  const { id, price } = input;
+  const updatedCash = await prismaClient.cash.update({
+    where: { id },
+    data: {
+      price,
+    },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      sector: true,
+    },
+  });
+
+  return updatedCash;
 };

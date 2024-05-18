@@ -93,18 +93,14 @@ const AssetPanelItemComponent: FC<Props> = ({
                   <></>
                 )}
               </div>
-              {data.group == "usStock" ? (
-                <div className="flex justify-end">
-                  <Button
-                    className="text-white bg-primary-700"
-                    onClick={() => setFormState(!formState)}
-                  >
-                    {formState ? "終了" : "編集"}
-                  </Button>
-                </div>
-              ) : (
-                <></>
-              )}
+              <div className="flex justify-end">
+                <Button
+                  className="text-white bg-primary-700"
+                  onClick={() => setFormState(!formState)}
+                >
+                  {formState ? "終了" : "編集"}
+                </Button>
+              </div>
               {!formState ? (
                 <InitialContent
                   detail={data}
