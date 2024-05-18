@@ -43,6 +43,9 @@ const AssetPanelItemComponent: FC<Props> = ({
       rate = Math.round(data.balanceRate * 100) / 100;
       break;
   }
+  const price =
+    data.group == "usStock" ? data.price / currentUsdJpy : data.price;
+  const displayPrice = Math.round(price * 10) / 10;
   return (
     <div className="">
       <div className="w-[90%] z-[1000] text-left mt-4 mb-4 ml-auto mr-auto border p-4 rounded drop-shadow border-neutral-600 flex justify-between items-center">
@@ -82,7 +85,8 @@ const AssetPanelItemComponent: FC<Props> = ({
                 {data.sector !== "fixedIncomeAsset" ? (
                   <div>
                     <p className="text-xl text-right">
-                      ¥{(Math.round(data.price * 10) / 10).toLocaleString()}
+                      {data.group == "usStock" ? "$" : "¥"}
+                      {displayPrice.toLocaleString()}
                     </p>
                   </div>
                 ) : (

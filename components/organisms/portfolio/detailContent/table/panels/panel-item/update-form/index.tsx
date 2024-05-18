@@ -2,7 +2,6 @@ import React, { FC, useState } from "react";
 import { Detail } from "@components/organisms/portfolio/types";
 import { PrimaryButton } from "@components/molecules/primary-button";
 import useUpdateUsStock from "@hooks/us-stock/useUpdateUsStock";
-import { UpdateUsStockInput } from "@server/repositories/stock/us/input";
 import { useAssetsContext } from "contexts/assetsContext";
 
 type Props = {
