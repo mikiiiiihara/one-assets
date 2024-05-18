@@ -16,6 +16,7 @@ export type Detail = {
   sumOfPrice: number;
   balance: number;
   balanceRate: number;
+  group: string;
 };
 
 export type AssetsSummary = {

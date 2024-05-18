@@ -5,7 +5,7 @@ import {
   fetchUsStockPrices,
 } from "@server/adapters/us-stock/us-stock.adapter";
 import { stringToDate } from "@server/utils/date";
-import { CreateUsStockInput } from "./input";
+import { CreateUsStockInput, UpdateUsStockInput } from "./input";
 
 export const List = async (userId: string): Promise<UsStockModel[]> => {
   const stocks = await prismaClient.usStock.findMany({
@@ -110,6 +110,44 @@ export const Create = async (
   const usStockDividend = await fetchUsStockDividend(newStock.code);
   return {
     ...newStock,
+    currentPrice: usStockMarketPrices[0].price,
+    priceGets: usStockMarketPrices[0].change,
+    currentRate: usStockMarketPrices[0].changesPercentage,
+    dividends: usStockDividend.historical.map((dividend) => ({
+      fixedDate: stringToDate(dividend.date),
+      paymentDate: stringToDate(dividend.paymentDate),
+      price: dividend.dividend,
+    })),
+  };
+};
+
+export const Update = async (
+  input: UpdateUsStockInput
+): Promise<UsStockModel> => {
+  const { id, quantity, getPrice, usdjpy } = input;
+  const updatedStock = await prismaClient.usStock.update({
+    where: { id },
+    data: {
+      quantity,
+      getPrice,
+      usdjpy,
+    },
+    select: {
+      id: true,
+      code: true,
+      getPrice: true,
+      quantity: true,
+      sector: true,
+      usdjpy: true,
+    },
+  });
+
+  // 株価情報を取得
+  const usStockMarketPrices = await fetchUsStockPrices([updatedStock.code]);
+  // 配当情報を取得
+  const usStockDividend = await fetchUsStockDividend(updatedStock.code);
+  return {
+    ...updatedStock,
     currentPrice: usStockMarketPrices[0].price,
     priceGets: usStockMarketPrices[0].change,
     currentRate: usStockMarketPrices[0].changesPercentage,

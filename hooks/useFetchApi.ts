@@ -5,10 +5,11 @@ const useFetchApi = () => {
 
   const fetchApi = async <T>(
     url: string,
-    setError: (message: string) => void
+    setError: (message: string) => void,
+    options?: RequestInit
   ): Promise<T | null> => {
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, options);
       if (!response.ok) {
         await handleApiError(response, setError, router);
         return null;

@@ -6,6 +6,7 @@ export interface ButtonProps {
   className?: string; // オプショナルなCSSクラス名
   onClick?: () => void; // オプショナルなクリックイベントハンドラ
   type?: "button" | "reset" | "submit";
+  disabled?: boolean;
 }
 
 const Component: React.FC<ButtonProps> = ({
@@ -13,12 +14,14 @@ const Component: React.FC<ButtonProps> = ({
   className = "",
   onClick,
   type,
+  disabled,
 }) => {
   return (
     <button
       className={`p-2 rounded-md flex align-middle ${className}`}
       onClick={onClick}
       type={type}
+      disabled={disabled}
     >
       {children}
     </button>

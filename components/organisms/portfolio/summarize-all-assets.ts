@@ -88,6 +88,7 @@ const calculateUsStock = (asset: Asset, fx: number): Detail => {
           100 *
           10
       ) / 10,
+    group: "usStock",
   };
 };
 
@@ -126,6 +127,7 @@ const calculateJapanStock = (asset: Asset): Detail => {
           100 *
           10
       ) / 10,
+    group: "japanStock",
   };
 };
 
@@ -169,6 +171,7 @@ const calculateJapanFund = (asset: Asset): Detail => {
     balanceRate:
       Math.round(((sumOfPrice - getPriceTotal) / sumOfGetPrice) * 100 * 10) /
       10,
+    group: "japanFund",
   };
 };
 
@@ -201,6 +204,7 @@ const calculateCryptos = (asset: Asset): Detail => {
     balanceRate:
       Math.round(((sumOfPrice - sumOfGetPrice) / sumOfGetPrice) * 100 * 10) /
       10,
+    group: "crypto",
   };
 };
 
@@ -242,6 +246,7 @@ const calculateFixedIncomeAsset = (asset: Asset): Detail => {
     sumOfPrice: getPriceTotal,
     balance: 0,
     balanceRate: 0,
+    group: "fixedIncomeAsset",
   };
 };
 
@@ -279,5 +284,6 @@ const calculateCash = (asset: Asset, fx: number): Detail => {
     sumOfPrice: sector == "JPY" ? getPriceTotal : getPriceTotal * fx,
     balance: 0,
     balanceRate: 0,
+    group: "cash",
   };
 };

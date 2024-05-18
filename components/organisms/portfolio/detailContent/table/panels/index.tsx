@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { DisplayType, AssetPanelItem } from "./panel-item";
 import { Detail } from "@components/organisms/portfolio/types";
+import useCurrentUsdJpy from "@hooks/useCurrentUsdJpy";
 
 type Props = {
   assetDetails: Detail[];
@@ -13,13 +14,14 @@ const AssetPanelComponent: FC<Props> = ({
   currency,
   displayType,
 }) => {
+  const { currentUsdJpy } = useCurrentUsdJpy();
   return (
     <div>
       {assetDetails.map((assets) => (
         <div key={assets.id}>
           <AssetPanelItem
             data={assets}
-            currency={currency}
+            currentUsdJpy={currentUsdJpy}
             displayType={displayType}
           />
         </div>

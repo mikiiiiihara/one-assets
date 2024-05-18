@@ -17,6 +17,7 @@ const useUser = () => {
     };
 
     getUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { user, isLoading, error };

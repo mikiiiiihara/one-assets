@@ -6,3 +6,10 @@ export type CreateUsStockInput = {
   usdjpy: number;
   userId: string;
 };
+
+export type UpdateUsStockInput = {
+  id: string;
+  getPrice: number;
+  quantity: number;
+  usdjpy: number;
+};
