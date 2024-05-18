@@ -17,7 +17,6 @@ const Component: FC<Props> = ({ detail }) => {
     e.preventDefault();
     //更新
     const updatedCash = await updateCash(detail.id, price);
-    console.log(updatedCash);
     // 資産情報のstateも更新
     if (updatedCash) {
       setAssets((prev) => {

@@ -14,7 +14,7 @@ const DISPLAY_MODE = {
   detail: "detail",
 };
 
-const Component: FC<Props> = ({ details, assetsSummary }) => {
+const Component: FC<Props> = ({ details }) => {
   const [displayMode, setDisplayMode] = useState(DISPLAY_MODE.summary);
   const changeDisplayToSummary = useCallback(
     () => setDisplayMode(DISPLAY_MODE.summary),

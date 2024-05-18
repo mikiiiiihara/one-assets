@@ -42,7 +42,6 @@ const Component: FC<Props> = ({ details }) => {
   }, []);
 
   const pieData = useMemo(() => calculateTickerPie(details), [details]);
-
   const sectorData: PieData[] = useMemo(
     () => calculateSectors(details),
     [details]

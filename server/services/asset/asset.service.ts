@@ -41,7 +41,7 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
       id: japanStock.id,
       priceGets: 0,
       quantity: japanStock.quantity,
-      sector: "japanStock",
+      sector: japanStock.sector,
       usdJpy: 0,
       group: "japanStock",
     });

@@ -43,9 +43,17 @@ const Portfolio: React.FC<Props> = ({ currentUsdJpy }) => {
 
   // 保有株式情報をグラフ用に加工
   const assetsSummary = useMemo(() => {
-    const isStockOnly =
+    const isUsStockOnly =
       selectedGroups.usStock &&
       !selectedGroups.japanStock &&
+      !selectedGroups.japanFund &&
+      !selectedGroups.crypto &&
+      !selectedGroups.fixedIncomeAsset &&
+      !selectedGroups.cash;
+
+    const isJapanStockOnly =
+      selectedGroups.japanStock &&
+      !selectedGroups.usStock &&
       !selectedGroups.japanFund &&
       !selectedGroups.crypto &&
       !selectedGroups.fixedIncomeAsset &&
@@ -57,11 +65,16 @@ const Portfolio: React.FC<Props> = ({ currentUsdJpy }) => {
       // 米国株のみの場合=セクター名そのまま使う
       // 日本株のみの場合=セクター名そのまま使う
       // 日本株と米国株の場合=セクター名そのまま使う
-      .map((asset) => ({
-        ...asset,
-        sector:
-          isStockOnly || asset.group != "usStock" ? asset.sector : "usStock",
-      }));
+      .map((asset) => {
+        let sector = asset.sector;
+        if (!isUsStockOnly && asset.group == "usStock") sector = "usStock";
+        if (!isJapanStockOnly && asset.group == "japanStock")
+          sector = "japanStock";
+        return {
+          ...asset,
+          sector,
+        };
+      });
     return summarizeAllAssets(filteredAssets, currentUsdJpy);
   }, [assets, currentUsdJpy, selectedGroups]);
 
