@@ -2,7 +2,7 @@ import Top from "@components/organisms/top";
 import ProtectedPage from " layouts/protected-page";
 import useUser from "hooks/useUser";
 import { signOut } from "next-auth/react";
-import useAssets from "@hooks/useAssets";
+import useAssets from "@hooks/assets/useAssets";
 import useCurrentUsdJpy from "@hooks/useCurrentUsdJpy";
 import { Loading } from "@components/atoms/loading";
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import useFetchAPI from "./useFetchApi";
+import useFetchAPI from "../useFetchApi";
 import { Asset } from "@server/services/asset/asset";
 
 const useAssets = () => {
@@ -18,9 +18,10 @@ const useAssets = () => {
     };
 
     getAssets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { assets, isLoading, error };
+  return { assets, setAssets, isLoading, error };
 };
 
 export default useAssets;

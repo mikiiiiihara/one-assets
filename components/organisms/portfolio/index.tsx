@@ -1,13 +1,13 @@
 import { Center } from "@components/atoms/center";
 import { TextTitle1 } from "@components/atoms/text/textTitle1";
-import { Asset } from "@server/services/asset/asset";
 import React, { useCallback, useMemo, useState } from "react";
 import { summarizeAllAssets } from "./summarize-all-assets";
 import { Empty } from "@components/atoms/empty";
 import { DetailContent } from "./detailContent";
+import { useAssetsContext } from "contexts/assetsContext";
+import { Loading } from "@components/atoms/loading";
 
 export type Props = {
-  assets: Asset[];
   currentUsdJpy: number;
 };
 
@@ -30,7 +30,8 @@ export const ASSET_DISPLAY_MODE = {
   cash: "現金",
 };
 
-const Portfolio: React.FC<Props> = ({ assets, currentUsdJpy }) => {
+const Portfolio: React.FC<Props> = ({ currentUsdJpy }) => {
+  const { assets, isLoading, error } = useAssetsContext();
   const [selectedGroups, setSelectedGroups] = useState<SelectedGroups>({
     usStock: true,
     japanStock: true,
@@ -100,6 +101,8 @@ const Portfolio: React.FC<Props> = ({ assets, currentUsdJpy }) => {
       </div>
     );
   };
+  if (isLoading) return <Loading />;
+  if (error) return <Center>Error: {error}</Center>;
   return (
     <Center>
       <div>
