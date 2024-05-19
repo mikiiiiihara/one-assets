@@ -160,3 +160,15 @@ model Cash {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
+
+model AssetHistory {
+  id                String  @id @default(cuid())
+  stock             Float
+  fund              Float
+  crypto            Float
+  fixedIncomeAsset  Float
+  cash              Float
+  userId            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
