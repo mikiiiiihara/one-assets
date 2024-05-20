@@ -28,6 +28,29 @@ export const List = async (
 
   return assetHistories;
 };
+
+export const GetLatest = async (
+  userId: string
+): Promise<AssetHistoryModel | null> => {
+  const latestAssetHistory = await prismaClient.assetHistory.findFirst({
+    where: { userId },
+    orderBy: {
+      createdAt: "desc", // 日付が新しい順に並べ替え
+    },
+    select: {
+      id: true,
+      stock: true,
+      fund: true,
+      crypto: true,
+      fixedIncomeAsset: true,
+      cash: true,
+      createdAt: true,
+    },
+  });
+
+  return latestAssetHistory;
+};
+
 export const Create = async (
   input: CreateAssetHistoryInput
 ): Promise<AssetHistoryModel> => {

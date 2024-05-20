@@ -17,3 +17,15 @@ export const Get = async (id: string): Promise<UserModel> => {
   const { name, email } = user;
   return { name: name ?? undefined, email: email ?? undefined };
 };
+
+export const IdList = async (): Promise<string[]> => {
+  // Fetch all users from DB
+  const ids = await prismaClient.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+  });
+  return ids.map((id) => id.id);
+};

@@ -15,36 +15,39 @@ export type Props = {
 };
 
 const AssetHistory: React.FC<Props> = ({ assetHistories }) => {
+  const sortedAssetHistories = assetHistories.sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  );
+  const latestAsset =
+    assetHistories.length > 0
+      ? buildAssetHistory(sortedAssetHistories[sortedAssetHistories.length - 1])
+      : 0;
+
   // graphのseriesデータを計算
   const series: StackedAreaType[] = [
     {
       name: "資産総額",
-      data: assetHistories
-        .sort(
-          (a, b) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        )
-        .map((asset) => buildAssetHistory(asset)),
+      data: sortedAssetHistories.map((asset) => buildAssetHistory(asset)),
     },
   ];
   // asset別のデータを計算
-  const detailSeries = summarizeAssetHistories(
-    assetHistories.sort(
-      (a, b) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-    )
-  );
+  const detailSeries = summarizeAssetHistories(sortedAssetHistories);
   return (
     <Center>
       <TextTitle1>資産推移</TextTitle1>
+      <h1>現在の資産総額：¥{latestAsset.toLocaleString()}</h1>
       <StackedArea
-        xData={assetHistories.map((asset) => formatDateToJST(asset.createdAt))}
+        xData={sortedAssetHistories.map((asset) =>
+          formatDateToJST(asset.createdAt)
+        )}
         series={series}
         themeColor={"rgb(82, 231, 171)"}
         background="#343a40"
       />
       <StackedArea
-        xData={assetHistories.map((asset) => formatDateToJST(asset.createdAt))}
+        xData={sortedAssetHistories.map((asset) =>
+          formatDateToJST(asset.createdAt)
+        )}
         series={detailSeries}
         background="#343a40"
       />

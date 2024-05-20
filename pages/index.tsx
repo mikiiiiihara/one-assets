@@ -16,7 +16,6 @@ export default function Component() {
 
   if (isLoading || isAssetsHistoryLoading) return <Loading />;
   if (error || assetsHistoryError) return <div>Error: {error}</div>;
-  console.log(assetHistories);
   if (!user) return <div>No user found</div>;
   return (
     <ProtectedPage>
