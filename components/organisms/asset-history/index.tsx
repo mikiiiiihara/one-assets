@@ -22,6 +22,10 @@ const AssetHistory: React.FC<Props> = ({ assetHistories }) => {
     assetHistories.length > 0
       ? buildAssetHistory(sortedAssetHistories[sortedAssetHistories.length - 1])
       : 0;
+  const prevLatestAsset =
+    assetHistories.length > 1
+      ? buildAssetHistory(sortedAssetHistories[sortedAssetHistories.length - 2])
+      : 0;
 
   // graphのseriesデータを計算
   const series: StackedAreaType[] = [
@@ -32,10 +36,26 @@ const AssetHistory: React.FC<Props> = ({ assetHistories }) => {
   ];
   // asset別のデータを計算
   const detailSeries = summarizeAssetHistories(sortedAssetHistories);
+
+  // 前日比の差分
+  const priceGap = latestAsset - prevLatestAsset;
+  // 前日比(%)の計算
+  const priceRate = (100 * priceGap) / prevLatestAsset;
+  const priceRateBalance = priceRate > 0 ? "text-plus" : "text-minus";
+  const balanceIcon = priceRate > 0 ? "+" : "";
+  const displayPriceRate = isNaN(priceRate)
+    ? "-"
+    : (Math.round(priceRate * 100) / 100).toLocaleString();
+
   return (
     <Center>
       <TextTitle1>資産推移</TextTitle1>
       <h1>現在の資産総額：¥{latestAsset.toLocaleString()}</h1>
+      <p className={priceRateBalance}>
+        前日比:¥{balanceIcon}
+        {priceGap.toLocaleString()}({balanceIcon}
+        {displayPriceRate}%)
+      </p>
       <StackedArea
         xData={sortedAssetHistories.map((asset) =>
           formatDateToJST(asset.createdAt)
