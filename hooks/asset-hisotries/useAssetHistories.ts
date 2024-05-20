@@ -12,7 +12,7 @@ const useAssetHistories = (day?: number) => {
     const getAssetHistories = async () => {
       setIsLoading(true);
       const query = day !== undefined ? `?day=${day}` : "";
-      const url = `/api/asset-history${query}`;
+      const url = `/api/asset-histories${query}`;
       const data = await fetchApi<AssetHistoryModel[]>(url, setError);
       if (data === null) throw new Error("Failed to fetch asset histories");
       setAssetHistories(data);
