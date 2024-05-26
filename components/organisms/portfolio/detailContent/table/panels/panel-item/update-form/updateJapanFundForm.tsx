@@ -1,43 +1,39 @@
 import React, { FC, useState } from "react";
 import { Detail } from "@components/organisms/portfolio/types";
 import { PrimaryButton } from "@components/molecules/primary-button";
-import useUpdateUsStock from "@hooks/us-stock/useUpdateUsStock";
 import { useAssetsContext } from "contexts/assetsContext";
+import useUpdateJapanFund from "@hooks/japan-fund/useUpdateJapanFund";
 
 type Props = {
   detail: Detail;
-  currentUsdJpy: number;
 };
 
-const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
-  const { isUpdating, updateUsStock, error } = useUpdateUsStock();
+const Component: FC<Props> = ({ detail }) => {
+  const { isUpdating, updateJapanFund, error } = useUpdateJapanFund();
   const { setAssets } = useAssetsContext();
-  const [quantity, setQuantity] = useState(detail.quantity);
-  const [getPrice, setGetPrice] = useState(
-    Math.round((detail.getPrice / currentUsdJpy) * 100) / 100
-  );
-  const [usdJpy, setUsdJpy] = useState(detail.usdJpy);
+  const [getPriceTotal, setGetPriceTotal] = useState(detail.sumOfGetPrice);
+  const [getPrice, setGetPrice] = useState(detail.getPrice);
 
   const onSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //更新
-    const updatedUsStock = await updateUsStock(
+    const updatedJapanFund = await updateJapanFund(
       detail.id,
-      quantity,
-      getPrice,
-      usdJpy
+      detail.name,
+      detail.code,
+      getPriceTotal,
+      getPrice
     );
 
     // 資産情報のstateも更新
-    if (updatedUsStock) {
+    if (updatedJapanFund) {
       setAssets((prev) => {
         return prev.map((asset) => {
-          if (asset.id === updatedUsStock.id) {
+          if (asset.id === updatedJapanFund.id) {
             return {
               ...asset,
-              quantity: updatedUsStock.quantity,
-              getPrice: updatedUsStock.getPrice,
-              usdJpy: updatedUsStock.usdjpy,
+              getPriceTotal: updatedJapanFund.getPriceTotal,
+              getPrice: updatedJapanFund.getPrice,
             };
           } else {
             return asset;
@@ -50,34 +46,25 @@ const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
   return (
     <form onSubmit={onSumbit}>
       <div className="mb-4 mt-4">
+        <p className="pb-1">銘柄名：{detail.name}</p>
         <p className="pb-1">
-          保有株数：
+          取得総額：¥
           <input
             className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
             type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            placeholder="例:10"
+            value={getPriceTotal}
+            onChange={(e) => setGetPriceTotal(Number(e.target.value))}
+            placeholder="例:50000"
           />
         </p>
         <p className="pb-1">
-          取得価格：$
+          取得価格：¥
           <input
             className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
             type="number"
             value={getPrice}
             onChange={(e) => setGetPrice(Number(e.target.value))}
-            placeholder="例:50"
-          />
-        </p>
-        <p className="pb-1">
-          取得為替：¥
-          <input
-            className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
-            type="number"
-            value={usdJpy}
-            onChange={(e) => setUsdJpy(Number(e.target.value))}
-            placeholder="例:150.2"
+            placeholder="例:12000"
           />
         </p>
       </div>
@@ -91,5 +78,5 @@ const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
   );
 };
 
-Component.displayName = "UpdateUsStockForm";
-export const UpdateUsStockForm = React.memo(Component);
+Component.displayName = "UpdateJapanFundForm";
+export const UpdateJapanFundForm = React.memo(Component);

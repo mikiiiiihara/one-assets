@@ -2,6 +2,7 @@ import React, { FC, useState } from "react";
 import { Detail } from "@components/organisms/portfolio/types";
 import { UpdateUsStockForm } from "./updateUsStockForm";
 import { UpdateCashForm } from "./updateCashForm";
+import { UpdateJapanFundForm } from "./updateJapanFundForm";
 
 type Props = {
   detail: Detail;
@@ -16,6 +17,8 @@ const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
       );
     case "cash":
       return <UpdateCashForm detail={detail} />;
+    case "japanFund":
+      return <UpdateJapanFundForm detail={detail} />;
     default:
       <p>aaaaa</p>;
   }

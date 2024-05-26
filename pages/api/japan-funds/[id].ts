@@ -3,14 +3,23 @@ import { JapanFundModel } from "@server/repositories/japan-fund/japan-fund.model
 import { updateJapanFund } from "@server/services/japan-fund/japan-fund.service";
 import { ErrorResponse } from "@server/utils/error";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<JapanFundModel | ErrorResponse>
 ) {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", ["POST"]);
+  if (req.method !== "PUT") {
+    res.setHeader("Allow", ["PUT"]);
     res.status(405).json({ message: "Method Not Allowed" });
+    return;
+  }
+
+  const session = await getServerSession(req, res, authOptions);
+
+  if (!session || !session.user.id) {
+    res.status(401).json({ message: "You must be logged in." });
     return;
   }
 
