@@ -1,6 +1,6 @@
 import prismaClient from "@server/lib/prisma-client";
 import { JapanFundModel } from "./japan-fund.model";
-import { CreateJapanFundInput } from "./input";
+import { CreateJapanFundInput, UpdateJapanFundInput } from "./input";
 
 export const List = async (userId: string): Promise<JapanFundModel[]> => {
   const funds = await prismaClient.japanFund.findMany({
@@ -66,4 +66,35 @@ export const Create = async (
   });
   if (!fundPrice) throw new Error("Fund Price not found");
   return { ...newFund, currentPrice: fundPrice.price };
+};
+
+export const Update = async (
+  data: UpdateJapanFundInput
+): Promise<JapanFundModel> => {
+  const updatedFund = await prismaClient.japanFund.update({
+    where: { id: data.id },
+    data: {
+      name: data.name,
+      code: data.code,
+      getPriceTotal: data.getPriceTotal,
+      getPrice: data.getPrice,
+    },
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      getPriceTotal: true,
+      getPrice: true,
+    },
+  });
+
+  // fundsの現在価格を取得する
+  const fundPrice = await prismaClient.japanFundPrice.findFirst({
+    where: { code: updatedFund.code },
+    select: {
+      price: true,
+    },
+  });
+  if (!fundPrice) throw new Error("Fund Price not found");
+  return { ...updatedFund, currentPrice: fundPrice.price };
 };

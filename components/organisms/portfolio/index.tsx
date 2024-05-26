@@ -6,6 +6,10 @@ import { Empty } from "@components/atoms/empty";
 import { DetailContent } from "./detailContent";
 import { useAssetsContext } from "contexts/assetsContext";
 import { Loading } from "@components/atoms/loading";
+import { PrimaryButton } from "@components/molecules/primary-button";
+import { Modal } from "@components/atoms/modal";
+import { CreateForms } from "./create-forms";
+import { Button } from "@components/atoms/button";
 
 export type Props = {
   currentUsdJpy: number;
@@ -40,6 +44,11 @@ const Portfolio: React.FC<Props> = ({ currentUsdJpy }) => {
     fixedIncomeAsset: true,
     cash: true,
   });
+  // モーダル表示切り替え用
+  const [modalState, setModalState] = useState(false);
+  const changeModal = () => {
+    setModalState(!modalState);
+  };
 
   // 保有株式情報をグラフ用に加工
   const assetsSummary = useMemo(() => {
@@ -132,6 +141,22 @@ const Portfolio: React.FC<Props> = ({ currentUsdJpy }) => {
           <DetailContent details={details} assetsSummary={assetsSummary} />
         ) : (
           <Empty />
+        )}
+      </div>
+      <div className="m-2 flex justify-center">
+        <PrimaryButton content="銘柄を追加" onClick={changeModal} />
+        {modalState ? (
+          <Modal>
+            <CreateForms currentUsdJpy={currentUsdJpy} />
+            <Button
+              className="bg-gray-500 text-white m-auto"
+              onClick={changeModal}
+            >
+              閉じる
+            </Button>
+          </Modal>
+        ) : (
+          <></>
         )}
       </div>
     </Center>

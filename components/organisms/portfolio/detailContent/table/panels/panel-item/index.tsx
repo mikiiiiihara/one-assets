@@ -3,6 +3,7 @@ import { Detail } from "@components/organisms/portfolio/types";
 import { InitialContent } from "./initial-content";
 import { Button } from "@components/atoms/button";
 import { UpdateAssetForm } from "./update-form";
+import { Modal } from "@components/atoms/modal";
 
 // 表示タイプ
 export const DISPLAY_TYPE = {
@@ -73,51 +74,49 @@ const AssetPanelItemComponent: FC<Props> = ({
       </div>
       <div className="">
         {modalState ? (
-          <div className="fixed flex inset-0 w-full h-full bg-black bg-opacity-50 z-[999] m-auto text-left	border p-8 rounded border-neutral-600">
-            <div className="h-auto w-full m-auto p-8 rounded bg-[#343a40]">
-              <div className="justify-between items-center">
-                <p className="text-2xl">{data.name}</p>
-                {data.sector == "japanStock" ? (
-                  <p className="text-lg">{data.code}</p>
-                ) : (
-                  <></>
-                )}
-                {data.sector !== "fixedIncomeAsset" ? (
-                  <div>
-                    <p className="text-xl text-right">
-                      {data.group == "usStock" ? "$" : "¥"}
-                      {displayPrice.toLocaleString()}
-                    </p>
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </div>
-              <div className="flex justify-end">
-                <Button
-                  className="text-white bg-primary-700"
-                  onClick={() => setFormState(!formState)}
-                >
-                  {formState ? "終了" : "編集"}
-                </Button>
-              </div>
-              {!formState ? (
-                <InitialContent
-                  detail={data}
-                  rate={rate}
-                  displayType={displayType}
-                />
+          <Modal>
+            <div className="justify-between items-center">
+              <p className="text-2xl">{data.name}</p>
+              {data.sector == "japanStock" ? (
+                <p className="text-lg">{data.code}</p>
               ) : (
-                <UpdateAssetForm detail={data} currentUsdJpy={currentUsdJpy} />
+                <></>
               )}
+              {data.sector !== "fixedIncomeAsset" ? (
+                <div>
+                  <p className="text-xl text-right">
+                    {data.group == "usStock" ? "$" : "¥"}
+                    {displayPrice.toLocaleString()}
+                  </p>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+            <div className="flex justify-end">
               <Button
-                className="bg-gray-500 text-white m-auto"
-                onClick={changeModal}
+                className="text-white bg-primary-700"
+                onClick={() => setFormState(!formState)}
               >
-                閉じる
+                {formState ? "終了" : "編集"}
               </Button>
             </div>
-          </div>
+            {!formState ? (
+              <InitialContent
+                detail={data}
+                rate={rate}
+                displayType={displayType}
+              />
+            ) : (
+              <UpdateAssetForm detail={data} currentUsdJpy={currentUsdJpy} />
+            )}
+            <Button
+              className="bg-gray-500 text-white m-auto"
+              onClick={changeModal}
+            >
+              閉じる
+            </Button>
+          </Modal>
         ) : (
           <></>
         )}
