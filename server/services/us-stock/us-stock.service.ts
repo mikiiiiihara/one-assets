@@ -5,6 +5,7 @@ import {
 import { UsStockModel } from "@server/repositories/stock/us/us-stock.model";
 import {
   Create,
+  Delete,
   List,
   Update,
 } from "@server/repositories/stock/us/us-stock.repository";
@@ -35,4 +36,8 @@ export const updateUsStock = async (
 ): Promise<UsStockModel> => {
   const newStock = await Update(input);
   return newStock;
+};
+
+export const deleteUsStock = async (id: string): Promise<UsStockModel> => {
+  return await Delete(id);
 };

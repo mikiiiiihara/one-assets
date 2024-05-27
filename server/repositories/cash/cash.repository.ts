@@ -56,3 +56,17 @@ export const Update = async (input: UpdateCashInput): Promise<CashModel> => {
 
   return updatedCash;
 };
+
+export const Delete = async (id: string): Promise<CashModel> => {
+  const deletedCash = await prismaClient.cash.delete({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      sector: true,
+    },
+  });
+
+  return deletedCash;
+};

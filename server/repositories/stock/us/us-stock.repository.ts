@@ -166,3 +166,25 @@ export const Update = async (
     })),
   };
 };
+
+export const Delete = async (id: string): Promise<UsStockModel> => {
+  // delete the stock
+  const deletedUsStock = await prismaClient.usStock.delete({
+    where: { id },
+    select: {
+      id: true,
+      code: true,
+      getPrice: true,
+      quantity: true,
+      sector: true,
+      usdjpy: true,
+    },
+  });
+  return {
+    ...deletedUsStock,
+    currentPrice: 0,
+    priceGets: 0,
+    currentRate: 0,
+    dividends: [],
+  };
+};
