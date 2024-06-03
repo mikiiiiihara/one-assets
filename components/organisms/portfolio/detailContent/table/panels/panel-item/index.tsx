@@ -56,10 +56,10 @@ const AssetPanelItemComponent: FC<Props> = ({
           <p className="text-xl">
             ¥{(Math.round(data.sumOfPrice * 10) / 10).toLocaleString()}
           </p>
-          {data.sector == "japanFund" ||
-          data.sector == "crypto" ||
-          data.sector == "japanStock" ||
-          data.sector == "usStock" ? (
+          {data.group == "japanFund" ||
+          data.group == "crypto" ||
+          data.group == "japanStock" ||
+          data.group == "usStock" ? (
             <p className={data.balance > 0 ? "text-plus" : "text-minus"}>
               {data.balance > 0 ? "+" : ""}
               {data.balance.toLocaleString()}({data.balanceRate}%)
