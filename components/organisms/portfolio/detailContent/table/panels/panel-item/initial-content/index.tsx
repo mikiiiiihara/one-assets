@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { Detail } from "@components/organisms/portfolio/types";
 import { DisplayType } from "..";
 
@@ -56,7 +56,7 @@ const Component: FC<Props> = ({ detail, rate, displayType }) => {
         <p className="pb-1">
           損益額：
           <span className={balance > 0 ? "text-plus" : "text-minus"}>
-            ¥{balance.toLocaleString()}（{detail.balanceRate}%）
+            ¥{balance.toLocaleString()}({detail.balanceRate}%)
           </span>
         </p>
         {detail.sector !== "japanFund" && detail.sector !== "crypto" ? (

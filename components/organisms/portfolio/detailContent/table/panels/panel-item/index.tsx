@@ -47,6 +47,7 @@ const AssetPanelItemComponent: FC<Props> = ({
   const price =
     data.group == "usStock" ? data.price / currentUsdJpy : data.price;
   const displayPrice = Math.round(price * 10) / 10;
+
   return (
     <div className="">
       <div className="w-[90%] z-[1000] text-left mt-4 mb-4 ml-auto mr-auto border p-4 rounded drop-shadow border-neutral-600 flex justify-between items-center">
@@ -55,20 +56,17 @@ const AssetPanelItemComponent: FC<Props> = ({
           <p className="text-xl">
             ¥{(Math.round(data.sumOfPrice * 10) / 10).toLocaleString()}
           </p>
-          <p className={rate > 0 ? "text-plus" : "text-minus"}>
-            {data.sector !== "japanFund" &&
-            data.sector !== "crypto" &&
-            data.sector !== "JPY" &&
-            data.sector !== "USD" &&
-            data.sector !== "fixedIncomeAsset" ? (
-              <>
-                {rate}
-                {displayType == "balance" ? "" : "%"}
-              </>
-            ) : (
-              <></>
-            )}
-          </p>
+          {data.sector == "japanFund" ||
+          data.sector == "crypto" ||
+          data.sector == "japanStock" ||
+          data.sector == "usStock" ? (
+            <p className={data.balance > 0 ? "text-plus" : "text-minus"}>
+              {data.balance > 0 ? "+" : ""}
+              {data.balance.toLocaleString()}({data.balanceRate}%)
+            </p>
+          ) : (
+            <></>
+          )}
         </div>
         <p onClick={changeModal}>詳細</p>
       </div>
