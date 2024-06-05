@@ -40,6 +40,19 @@ const mockFetchDividends =
   >;
 
 describe("UsStockRepository", () => {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0"); // 月は0から始まるので+1し、2桁にパディング
+  const currentDay = String(currentDate.getDate()).padStart(2, "0");
+
+  const threeMonthsAgo = new Date();
+  threeMonthsAgo.setMonth(currentDate.getMonth() - 3);
+  const threeMonthsAgoYear = threeMonthsAgo.getFullYear();
+  const threeMonthsAgoMonth = String(threeMonthsAgo.getMonth() + 1).padStart(
+    2,
+    "0"
+  );
+  const threeMonthsAgoDay = String(threeMonthsAgo.getDate()).padStart(2, "0");
   // mock化
   const mockStocks = [
     {
@@ -82,26 +95,25 @@ describe("UsStockRepository", () => {
     symbol: code,
     historical: [
       {
-        date: "2022-05-07",
-        label: "May 07, 22",
+        date: `${currentYear}-${currentMonth}-${currentDay}`,
+        label: `${currentMonth} ${currentDay}, ${String(currentYear).slice(-2)}`,
         adjDividend: 0.85,
         dividend: 0.85,
-        recordDate: "2022-05-09",
-        paymentDate: "2022-05-15",
-        declarationDate: "2022-04-30",
+        recordDate: `${currentYear}-${currentMonth}-${currentDay}`,
+        paymentDate: `${currentYear}-${currentMonth}-${String(currentDate.getDate() + 7).padStart(2, "0")}`,
+        declarationDate: `${currentYear}-${currentMonth}-${String(currentDate.getDate() - 7).padStart(2, "0")}`,
       },
       {
-        date: "2022-02-05",
-        label: "Feb 05, 22",
+        date: `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${threeMonthsAgoDay}`,
+        label: `${threeMonthsAgoMonth} ${threeMonthsAgoDay}, ${String(threeMonthsAgoYear).slice(-2)}`,
         adjDividend: 0.82,
         dividend: 0.82,
-        recordDate: "2022-02-07",
-        paymentDate: "2022-02-13",
-        declarationDate: "2022-01-29",
+        recordDate: `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${String(threeMonthsAgo.getDate() + 2).padStart(2, "0")}`,
+        paymentDate: `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${String(threeMonthsAgo.getDate() + 8).padStart(2, "0")}`,
+        declarationDate: `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${String(threeMonthsAgo.getDate() - 2).padStart(2, "0")}`,
       },
     ],
   };
-
   // 期待値
   const expectedStock: UsStockModel = {
     id: "1",
@@ -115,13 +127,19 @@ describe("UsStockRepository", () => {
     priceGets: 2,
     dividends: [
       {
-        fixedDate: new Date("2022-05-07"),
-        paymentDate: new Date("2022-05-15"),
+        fixedDate: new Date(`${currentYear}-${currentMonth}-${currentDay}`),
+        paymentDate: new Date(
+          `${currentYear}-${currentMonth}-${String(currentDate.getDate() + 7).padStart(2, "0")}`
+        ),
         price: 0.85,
       },
       {
-        fixedDate: new Date("2022-02-05"),
-        paymentDate: new Date("2022-02-13"),
+        fixedDate: new Date(
+          `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${threeMonthsAgoDay}`
+        ),
+        paymentDate: new Date(
+          `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${String(threeMonthsAgo.getDate() + 8).padStart(2, "0")}`
+        ),
         price: 0.82,
       },
     ],
@@ -138,13 +156,22 @@ describe("UsStockRepository", () => {
       jest.clearAllMocks();
     });
 
-    it("should return a list of stocks for a user", async () => {
+    it("should return a list of stocks for a user(isIncludedDividend = true)", async () => {
+      mockFindMany.mockResolvedValue(mockStocks as any);
+      mockFetchPrices.mockResolvedValue(mockUsStockMarketPrices);
+      mockFetchDividends.mockResolvedValue(mockUsStockDividend);
+
+      const result = await List("user1", true);
+      expect(result).toEqual(expectedStocks);
+    });
+
+    it("should return a list of stocks for a user(isIncludedDividend = false)", async () => {
       mockFindMany.mockResolvedValue(mockStocks as any);
       mockFetchPrices.mockResolvedValue(mockUsStockMarketPrices);
       mockFetchDividends.mockResolvedValue(mockUsStockDividend);
 
       const result = await List("user1");
-      expect(result).toEqual(expectedStocks);
+      expect(result).toEqual([{ ...expectedStock, dividends: [] }]);
     });
 
     it("should handle empty stock list", async () => {

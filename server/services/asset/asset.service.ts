@@ -5,11 +5,12 @@ import { List as JapanStockList } from "@server/repositories/stock/jp/japan-stoc
 import { List as FixedIncomeAssetList } from "@server/repositories/fixed-income-asset/fixed-income-asset.repository";
 import { List as CashList } from "@server/repositories/cash/cash.repository";
 import { List as CryptoList } from "@server/repositories/crypto/crypto.repository";
+import { buildDividendOfFixedIncomeAsset, buildDividendOfJapanStock } from ".";
 
 export const getAssets = async (userId: string): Promise<Asset[]> => {
   const assets: Asset[] = [];
   // 米国株式
-  const usStocks = await UsStockList(userId);
+  const usStocks = await UsStockList(userId, true);
   usStocks.forEach((usStock) => {
     assets.push({
       code: usStock.code,
@@ -35,7 +36,7 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
       name: japanStock.name,
       currentPrice: japanStock.currentPrice,
       currentRate: 0,
-      dividends: [],
+      dividends: buildDividendOfJapanStock(japanStock.dividends),
       getPrice: japanStock.getPrice,
       getPriceTotal: japanStock.getPrice * japanStock.quantity,
       id: japanStock.id,
@@ -92,7 +93,7 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
       name: fixedIncomeAsset.code,
       currentPrice: 0,
       currentRate: 0,
-      dividends: [],
+      dividends: buildDividendOfFixedIncomeAsset(fixedIncomeAsset),
       getPrice: 0,
       getPriceTotal: fixedIncomeAsset.getPriceTotal,
       id: fixedIncomeAsset.id,

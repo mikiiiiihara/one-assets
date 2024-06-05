@@ -1,5 +1,5 @@
 import prismaClient from "@server/lib/prisma-client";
-import { UsStockModel } from "./us-stock.model";
+import { Dividend, UsStockModel } from "./us-stock.model";
 import {
   fetchUsStockDividend,
   fetchUsStockPrices,
@@ -49,13 +49,7 @@ export const List = async (
         priceGets: marketPrice.change,
         currentRate: marketPrice.changesPercentage,
         dividends:
-          dividends != null
-            ? dividends.historical.map((dividend) => ({
-                fixedDate: stringToDate(dividend.date),
-                paymentDate: stringToDate(dividend.paymentDate),
-                price: dividend.dividend,
-              }))
-            : [],
+          dividends != null ? mapAnnualDividends(dividends.historical) : [],
       };
     })
   );
@@ -83,11 +77,7 @@ export const Get = async (id: string): Promise<UsStockModel | null> => {
     currentPrice: usStockMarketPrices[0].price,
     priceGets: usStockMarketPrices[0].change,
     currentRate: usStockMarketPrices[0].changesPercentage,
-    dividends: usStockDividend.historical.map((dividend) => ({
-      fixedDate: stringToDate(dividend.date),
-      paymentDate: stringToDate(dividend.paymentDate),
-      price: dividend.dividend,
-    })),
+    dividends: mapAnnualDividends(usStockDividend.historical),
   };
 };
 
@@ -121,11 +111,7 @@ export const Create = async (
     currentPrice: usStockMarketPrices[0].price,
     priceGets: usStockMarketPrices[0].change,
     currentRate: usStockMarketPrices[0].changesPercentage,
-    dividends: usStockDividend.historical.map((dividend) => ({
-      fixedDate: stringToDate(dividend.date),
-      paymentDate: stringToDate(dividend.paymentDate),
-      price: dividend.dividend,
-    })),
+    dividends: mapAnnualDividends(usStockDividend.historical),
   };
 };
 
@@ -159,11 +145,7 @@ export const Update = async (
     currentPrice: usStockMarketPrices[0].price,
     priceGets: usStockMarketPrices[0].change,
     currentRate: usStockMarketPrices[0].changesPercentage,
-    dividends: usStockDividend.historical.map((dividend) => ({
-      fixedDate: stringToDate(dividend.date),
-      paymentDate: stringToDate(dividend.paymentDate),
-      price: dividend.dividend,
-    })),
+    dividends: mapAnnualDividends(usStockDividend.historical),
   };
 };
 
@@ -187,4 +169,24 @@ export const Delete = async (id: string): Promise<UsStockModel> => {
     currentRate: 0,
     dividends: [],
   };
+};
+
+/**
+ * 1年あたりの配当を計算する
+ */
+const mapAnnualDividends = (dividends: UsStockDividendItem[]): Dividend[] => {
+  const currentDate = new Date();
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+
+  return dividends
+    .map((dividend) => ({
+      fixedDate: stringToDate(dividend.date),
+      paymentDate: stringToDate(dividend.paymentDate),
+      price: dividend.dividend,
+    }))
+    .filter(
+      (dividend) =>
+        dividend.fixedDate >= oneYearAgo && dividend.fixedDate <= currentDate
+    );
 };

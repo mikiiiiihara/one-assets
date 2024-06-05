@@ -1,3 +1,5 @@
+import { Dividend } from "@server/repositories/stock/us/us-stock.model";
+
 export type Detail = {
   id: string;
   code: string;
@@ -7,7 +9,7 @@ export type Detail = {
   price: number;
   priceGets: number;
   priceRate: number;
-  dividend: number;
+  dividend: Dividend[];
   sumOfDividend: number;
   dividendRate: number;
   sector: string;

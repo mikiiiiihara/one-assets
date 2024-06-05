@@ -1,5 +1,6 @@
 import { Asset } from "@server/services/asset/asset";
 import { AssetsSummary, Detail } from "./types";
+import { Dividend } from "@server/repositories/stock/us/us-stock.model";
 
 export const summarizeAllAssets = (
   asset: Asset[],
@@ -59,10 +60,8 @@ const calculateUsStock = (asset: Asset, fx: number): Detail => {
   const getPrice = asset.getPrice * usdJpy;
   const price = asset.currentPrice * fx;
   const priceRate = asset.currentRate;
-  // TODO: 配当金額を計算
-  //   const dividend = dividends * fx;
-  const dividend = 0;
-  const sumOfDividend = quantity * (dividend * 0.71);
+  const dividendAmount = calculateTotalDividendPrice(asset.dividends) * fx;
+  const sumOfDividend = quantity * (dividendAmount * 0.71);
   const sumOfGetPrice = Math.round(quantity * getPrice * 10) / 10;
   const sumOfPrice = Math.round(quantity * price * 10) / 10;
   return {
@@ -74,9 +73,10 @@ const calculateUsStock = (asset: Asset, fx: number): Detail => {
     price,
     priceGets,
     priceRate,
-    dividend,
+    dividend: asset.dividends,
     sumOfDividend: Math.round(sumOfDividend * 100) / 100,
-    dividendRate: Math.round(((dividend * 0.71 * 100) / getPrice) * 100) / 100,
+    dividendRate:
+      Math.round(((dividendAmount * 0.71 * 100) / getPrice) * 100) / 100,
     sector,
     usdJpy,
     sumOfGetPrice,
@@ -99,9 +99,8 @@ const calculateJapanStock = (asset: Asset): Detail => {
   const price = asset.currentPrice;
   const priceRate = asset.currentRate;
   // TODO: 配当金額を計算
-  //   const dividend = dividends * fx;
-  const dividend = 0;
-  const sumOfDividend = quantity * (dividend * 0.8);
+  const dividendAmount = calculateTotalDividendPrice(asset.dividends);
+  const sumOfDividend = quantity * (dividendAmount * 0.8);
   const sumOfGetPrice = Math.round(quantity * getPrice * 10) / 10;
   const sumOfPrice = Math.round(quantity * price * 10) / 10;
   return {
@@ -113,9 +112,10 @@ const calculateJapanStock = (asset: Asset): Detail => {
     price,
     priceGets,
     priceRate,
-    dividend,
+    dividend: asset.dividends,
     sumOfDividend: Math.round(sumOfDividend * 100) / 100,
-    dividendRate: Math.round(((dividend * 0.71 * 100) / getPrice) * 100) / 100,
+    dividendRate:
+      Math.round(((dividendAmount * 0.71 * 100) / getPrice) * 100) / 100,
     sector,
     usdJpy,
     sumOfGetPrice,
@@ -160,7 +160,7 @@ const calculateJapanFund = (asset: Asset): Detail => {
     price: currentPrice,
     priceGets,
     priceRate,
-    dividend,
+    dividend: [],
     sumOfDividend: 0,
     dividendRate: 0,
     sector,
@@ -193,7 +193,7 @@ const calculateCryptos = (asset: Asset): Detail => {
     price: currentPrice,
     priceGets,
     priceRate,
-    dividend: 0,
+    dividend: [],
     sumOfDividend: 0,
     dividendRate: 0,
     sector,
@@ -224,8 +224,8 @@ const calculateFixedIncomeAsset = (asset: Asset): Detail => {
   } = asset;
   const priceRate = asset.currentRate;
   // TODO: 配当金額を計算
-  //   const sumOfDividend = dividend * 0.8;
-  const sumOfDividend = 0;
+  const dividendAmount = calculateTotalDividendPrice(asset.dividends);
+  const sumOfDividend = dividendAmount;
   return {
     id,
     code,
@@ -235,11 +235,10 @@ const calculateFixedIncomeAsset = (asset: Asset): Detail => {
     price: currentPrice,
     priceGets,
     priceRate,
-    dividend: 0,
+    dividend: asset.dividends,
     sumOfDividend,
     // TODO: 配当利回りを計算
-    // dividendRate: (100 * dividend) / getPriceTotal,
-    dividendRate: 0,
+    dividendRate: (100 * dividendAmount) / getPriceTotal,
     sector,
     usdJpy,
     sumOfGetPrice: getPriceTotal,
@@ -275,7 +274,7 @@ const calculateCash = (asset: Asset, fx: number): Detail => {
     price: currentPrice,
     priceGets,
     priceRate,
-    dividend: 0,
+    dividend: [],
     sumOfDividend,
     dividendRate: 0,
     sector,
@@ -286,4 +285,8 @@ const calculateCash = (asset: Asset, fx: number): Detail => {
     balanceRate: 0,
     group: "cash",
   };
+};
+
+export const calculateTotalDividendPrice = (dividends: Dividend[]): number => {
+  return dividends.reduce((total, dividend) => total + dividend.price, 0);
 };
