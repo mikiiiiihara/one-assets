@@ -10,6 +10,8 @@ import { PrimaryButton } from "@components/molecules/primary-button";
 import { Modal } from "@components/atoms/modal";
 import { CreateForms } from "./create-forms";
 import { Button } from "@components/atoms/button";
+import { StackedColumn } from "@components/atoms/graph/stacked-column";
+import { convertDetailsToDivData } from "./calculate-dividends-for-graph";
 
 export type Props = {
   currentUsdJpy: number;
@@ -35,6 +37,19 @@ export const ASSET_DISPLAY_MODE = {
 };
 
 const Portfolio: React.FC<Props> = ({ currentUsdJpy }) => {
+  const themeDefault = [
+    "#007bff",
+    "#ff3333",
+    "#ffd700",
+    "#00d56a",
+    "orange",
+    "#00ced1",
+    "#6495ED",
+    "#ff5192",
+    "#ffff00",
+    "#66cc99",
+    "#ff9966",
+  ];
   const { assets, isLoading, error } = useAssetsContext();
   const [selectedGroups, setSelectedGroups] = useState<SelectedGroups>({
     usStock: true,
@@ -123,6 +138,7 @@ const Portfolio: React.FC<Props> = ({ currentUsdJpy }) => {
       </div>
     );
   };
+  const divData = convertDetailsToDivData(details);
   if (isLoading) return <Loading />;
   if (error) return <Center>Error: {error}</Center>;
   return (
@@ -159,6 +175,12 @@ const Portfolio: React.FC<Props> = ({ currentUsdJpy }) => {
           <></>
         )}
       </div>
+      <TextTitle1>配当支払い予定</TextTitle1>
+      <StackedColumn
+        divData={divData}
+        themeColor={themeDefault}
+        background="#343a40"
+      />
     </Center>
   );
 };

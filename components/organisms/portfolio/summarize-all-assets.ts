@@ -73,7 +73,12 @@ const calculateUsStock = (asset: Asset, fx: number): Detail => {
     price,
     priceGets,
     priceRate,
-    dividend: asset.dividends,
+    dividend: asset.dividends.map((dividend) => {
+      return {
+        ...dividend,
+        price: Math.round(dividend.price * fx * 0.71 * 100) / 100,
+      };
+    }),
     sumOfDividend: Math.round(sumOfDividend * 100) / 100,
     dividendRate:
       Math.round(((dividendAmount * 0.71 * 100) / getPrice) * 100) / 100,
@@ -112,7 +117,12 @@ const calculateJapanStock = (asset: Asset): Detail => {
     price,
     priceGets,
     priceRate,
-    dividend: asset.dividends,
+    dividend: asset.dividends.map((dividend) => {
+      return {
+        ...dividend,
+        price: Math.round(dividend.price * 0.8 * 100) / 100,
+      };
+    }),
     sumOfDividend: Math.round(sumOfDividend * 100) / 100,
     dividendRate:
       Math.round(((dividendAmount * 0.71 * 100) / getPrice) * 100) / 100,
@@ -146,7 +156,6 @@ const calculateJapanFund = (asset: Asset): Detail => {
     currentPrice,
   } = asset;
   const priceRate = asset.currentRate;
-  const dividend = 0;
 
   // 取得時総額、現在価格、取得価格から、評価総額を逆算
   const sumOfGetPrice = getPriceTotal;
@@ -223,7 +232,6 @@ const calculateFixedIncomeAsset = (asset: Asset): Detail => {
     currentPrice,
   } = asset;
   const priceRate = asset.currentRate;
-  // TODO: 配当金額を計算
   const dividendAmount = calculateTotalDividendPrice(asset.dividends);
   const sumOfDividend = dividendAmount;
   return {
@@ -237,7 +245,6 @@ const calculateFixedIncomeAsset = (asset: Asset): Detail => {
     priceRate,
     dividend: asset.dividends,
     sumOfDividend,
-    // TODO: 配当利回りを計算
     dividendRate: (100 * dividendAmount) / getPriceTotal,
     sector,
     usdJpy,
