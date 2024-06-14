@@ -27,15 +27,17 @@ const AssetHistory: React.FC<Props> = ({ assetHistories }) => {
       ? buildAssetHistory(sortedAssetHistories[sortedAssetHistories.length - 2])
       : 0;
 
-  // graphのseriesデータを計算
-  const series: StackedAreaType[] = [
-    {
-      name: "資産総額",
-      data: sortedAssetHistories.map((asset) => buildAssetHistory(asset)),
-    },
-  ];
-  // asset別のデータを計算
-  const detailSeries = summarizeAssetHistories(sortedAssetHistories);
+  // トータルリターンの計算
+  const initialAsset =
+    assetHistories.length > 0 ? buildAssetHistory(sortedAssetHistories[0]) : 0;
+  const totalReturn = latestAsset - initialAsset;
+  const totalReturnRate =
+    initialAsset > 0 ? (100 * totalReturn) / initialAsset : 0;
+  const totalReturnBalance = totalReturn > 0 ? "text-plus" : "text-minus";
+  const totalReturnIcon = totalReturn > 0 ? "+" : "";
+  const displayTotalReturnRate = isNaN(totalReturnRate)
+    ? "-"
+    : (Math.round(totalReturnRate * 100) / 100).toLocaleString();
 
   // 前日比の差分
   const priceGap = latestAsset - prevLatestAsset;
@@ -47,6 +49,16 @@ const AssetHistory: React.FC<Props> = ({ assetHistories }) => {
     ? "-"
     : (Math.round(priceRate * 100) / 100).toLocaleString();
 
+  // graphのseriesデータを計算
+  const series: StackedAreaType[] = [
+    {
+      name: "資産総額",
+      data: sortedAssetHistories.map((asset) => buildAssetHistory(asset)),
+    },
+  ];
+  // asset別のデータを計算
+  const detailSeries = summarizeAssetHistories(sortedAssetHistories);
+
   return (
     <Center>
       <TextTitle1>資産推移</TextTitle1>
@@ -56,6 +68,13 @@ const AssetHistory: React.FC<Props> = ({ assetHistories }) => {
         {priceGap.toLocaleString()}({balanceIcon}
         {displayPriceRate}%)
       </p>
+      {sortedAssetHistories.length > 2 && (
+        <p className={totalReturnBalance}>
+          トータルリターン:¥{totalReturnIcon}
+          {totalReturn.toLocaleString()}({totalReturnIcon}
+          {displayTotalReturnRate}%)
+        </p>
+      )}
       <StackedArea
         xData={sortedAssetHistories.map((asset) =>
           formatDateToJST(asset.createdAt)
