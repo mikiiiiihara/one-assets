@@ -41,6 +41,7 @@ const mockFetchDividends =
 
 describe("UsStockRepository", () => {
   const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() - 2);
   const currentYear = currentDate.getFullYear();
   const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0"); // 月は0から始まるので+1し、2桁にパディング
   const currentDay = String(currentDate.getDate()).padStart(2, "0");
