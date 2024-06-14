@@ -16,9 +16,16 @@ import { CreateAssetHistoryInput } from "@server/repositories/asset-history/inpu
 
 export const AssetHistoryList = async (
   userId: string,
-  day?: number
+  day?: number,
+  startDate?: Date,
+  endDate?: Date
 ): Promise<AssetHistoryModel[]> => {
-  return await List(userId, day);
+  const utcStartDate = startDate
+    ? new Date(startDate.toISOString())
+    : undefined;
+  const utcEndDate = endDate ? new Date(endDate.toISOString()) : undefined;
+
+  return await List(userId, day, utcStartDate, utcEndDate);
 };
 
 export type AssetCreatedResponse = {

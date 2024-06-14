@@ -1,13 +1,24 @@
 import prismaClient from "@server/lib/prisma-client";
 import { AssetHistoryModel } from "./asset-history.model";
 import { CreateAssetHistoryInput } from "./input";
-
 export const List = async (
   userId: string,
-  day?: number
+  day?: number,
+  startDate?: Date,
+  endDate?: Date
 ): Promise<AssetHistoryModel[]> => {
+  const whereClause: any = { userId };
+
+  if (startDate) {
+    whereClause.createdAt = { ...whereClause.createdAt, gte: startDate };
+  }
+
+  if (endDate) {
+    whereClause.createdAt = { ...whereClause.createdAt, lte: endDate };
+  }
+
   const assetHistories = await prismaClient.assetHistory.findMany({
-    where: { userId },
+    where: whereClause,
     select: {
       id: true,
       stock: true,

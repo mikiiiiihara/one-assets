@@ -17,11 +17,18 @@ export default async function handler(
     return;
   }
 
-  const { day } = req.query;
+  const { day, startDate, endDate } = req.query;
   const dayNumber = day ? parseInt(day as string, 10) : undefined;
+  const start = startDate ? new Date(startDate as string) : undefined;
+  const end = endDate ? new Date(endDate as string) : undefined;
 
   try {
-    const assetHistories = await AssetHistoryList(session.user.id, dayNumber);
+    const assetHistories = await AssetHistoryList(
+      session.user.id,
+      dayNumber,
+      start,
+      end
+    );
     return res.json(assetHistories);
   } catch (error) {
     res.status(500).json({ message: "Internal server error." });

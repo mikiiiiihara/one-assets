@@ -121,6 +121,9 @@ const Component: FC<Props> = ({ currentUsdJpy }) => {
             placeholder="例:150.2"
           />
         </p>
+        <p className="pb-1">
+          見積価格：¥ {Math.round(getPrice * usdJpy * quantity)}
+        </p>
       </div>
       <PrimaryButton
         className="ml-1"
