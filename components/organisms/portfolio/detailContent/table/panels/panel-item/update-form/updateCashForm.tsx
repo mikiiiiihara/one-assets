@@ -8,13 +8,18 @@ import { DangerButton } from "@components/molecules/danger-button";
 
 type Props = {
   detail: Detail;
+  currentUsdJpy: number;
 };
 
-const Component: FC<Props> = ({ detail }) => {
+const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
   const { isUpdating, updateCash, error } = useUpdateCash();
   const { isDeleting, deleteCash, error: deleteError } = useDeleteCash();
   const { setAssets } = useAssetsContext();
-  const [price, setPrice] = useState(detail.sumOfPrice);
+  const [price, setPrice] = useState(
+    detail.sector === "USD"
+      ? detail.sumOfPrice / currentUsdJpy
+      : detail.sumOfPrice
+  );
 
   const onSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

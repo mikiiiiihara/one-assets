@@ -16,7 +16,7 @@ const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
         <UpdateUsStockForm detail={detail} currentUsdJpy={currentUsdJpy} />
       );
     case "cash":
-      return <UpdateCashForm detail={detail} />;
+      return <UpdateCashForm detail={detail} currentUsdJpy={currentUsdJpy} />;
     case "japanFund":
       return <UpdateJapanFundForm detail={detail} />;
     default:
