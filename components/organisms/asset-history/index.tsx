@@ -63,11 +63,6 @@ const AssetHistory: React.FC<Props> = ({ assetHistories }) => {
     <Center>
       <TextTitle1>資産推移</TextTitle1>
       <h1>現在の資産総額：¥{latestAsset.toLocaleString()}</h1>
-      <p className={priceRateBalance}>
-        前日比:¥{balanceIcon}
-        {priceGap.toLocaleString()}({balanceIcon}
-        {displayPriceRate}%)
-      </p>
       {sortedAssetHistories.length > 2 && (
         <p className={totalReturnBalance}>
           トータルリターン:¥{totalReturnIcon}
@@ -75,6 +70,11 @@ const AssetHistory: React.FC<Props> = ({ assetHistories }) => {
           {displayTotalReturnRate}%)
         </p>
       )}
+      <p className={priceRateBalance}>
+        前日比:¥{balanceIcon}
+        {priceGap.toLocaleString()}({balanceIcon}
+        {displayPriceRate}%)
+      </p>
       <StackedArea
         xData={sortedAssetHistories.map((asset) =>
           formatDateToJST(asset.createdAt)
