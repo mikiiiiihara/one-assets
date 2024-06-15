@@ -77,14 +77,24 @@ const Component: FC<Props> = ({ detail, currentUsdJpy, cashes }) => {
   const currentGetPriceUSD =
     Math.round((detail.getPrice / currentUsdJpy) * 100) / 100;
   const isChanged =
-    quantity == detail.quantity && getPrice == currentGetPriceUSD;
+    quantity != detail.quantity || getPrice != currentGetPriceUSD;
   // 変更差分
   const changedPriceUSD =
     Math.round(
       (getPrice * quantity - currentGetPriceUSD * detail.quantity) * 100
     ) / 100;
   const changedPriceJPY =
-    Math.round(changedPriceUSD * currentUsdJpy * 100) / 100;
+    Math.round(
+      (getPrice * quantity * usdJpy -
+        currentGetPriceUSD * detail.quantity * detail.usdJpy) *
+        100
+    ) / 100;
+  // 現金情報に反映する場合、口座の金額が足りているか？
+  const cash = cashes.find((cash) => cash.id === cashId);
+  // ドル建てか円建てかで判定方法を変える
+  const comparedCashPrice =
+    cash?.sector === "USD" ? changedPriceUSD : changedPriceJPY;
+  const isEnoughCash = cash ? cash.price >= comparedCashPrice : true;
   return (
     <>
       <form onSubmit={onSumbit}>
@@ -120,42 +130,52 @@ const Component: FC<Props> = ({ detail, currentUsdJpy, cashes }) => {
             />
           </p>
           <p className="pb-1">
-            追加発生費用：{" "}
-            {isChanged ? "$0" : `$${changedPriceUSD}(¥${changedPriceJPY})`}
+            追加発生費用：
+            {isChanged
+              ? `$${changedPriceUSD.toLocaleString()}(¥${changedPriceJPY.toLocaleString()})`
+              : "$0"}
           </p>
-          <div>
-            <p className="pb-1">
-              変更分を現金情報に反映：
-              <input
-                type="checkbox"
-                checked={isChecked}
-                onChange={handleCheckboxChange}
-              />
-            </p>
-            {isChecked && (
-              <p>
-                <select
-                  className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
-                  value={cashId}
-                  onChange={(e) => setCashId(e.target.value)}
-                >
-                  <option value="" disabled>
-                    選択してください
-                  </option>
-                  {cashes.map((cash) => (
-                    <option key={cash.id} value={cash.name}>
-                      {cash.name}:{cash.sector == "JPY" ? "¥" : "$"}
-                      {cash.price.toLocaleString()}
-                    </option>
-                  ))}
-                </select>
+          {isChanged ? (
+            <div>
+              <p className="pb-1">
+                変更分を現金情報に反映：
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={handleCheckboxChange}
+                />
               </p>
-            )}
-          </div>
+              {isChecked && (
+                <p>
+                  <select
+                    className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+                    value={cashId}
+                    onChange={(e) => setCashId(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      選択してください
+                    </option>
+                    {cashes.map((cash) => (
+                      <option key={cash.id} value={cash.id}>
+                        {cash.name}:{cash.sector == "JPY" ? "¥" : "$"}
+                        {cash.price.toLocaleString()}
+                      </option>
+                    ))}
+                  </select>
+                  {isChecked && !isEnoughCash && (
+                    <span className="text-red-500">金額が足りません</span>
+                  )}
+                </p>
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         <PrimaryButton
           className="ml-1"
           content={!isUpdating ? "更新" : "更新中..."}
+          disabled={!isChanged || (isChecked && !isEnoughCash)}
           type="submit"
         />
         {error && <div className="text-red-500 mt-2">{error}</div>}
