@@ -46,6 +46,8 @@ export default async function handler(
       quantity: req.body.quantity,
       getPrice: req.body.getPrice,
       usdjpy: req.body.usdJpy,
+      cashId: req.body.cashId,
+      changedPrice: req.body.changedPrice,
     };
 
     try {

@@ -8,7 +8,14 @@ const useUpdateUsStock = () => {
   const fetchApi = useFetchAPI();
 
   const updateUsStock = useCallback(
-    async (id: string, quantity: number, getPrice: number, usdJpy: number) => {
+    async (
+      id: string,
+      quantity: number,
+      getPrice: number,
+      usdJpy: number,
+      cashId?: string,
+      changedPrice?: number
+    ) => {
       setIsUpdating(true);
       try {
         const updatedStock = await fetchApi<UsStockModel>(
@@ -19,7 +26,13 @@ const useUpdateUsStock = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ quantity, getPrice, usdJpy }),
+            body: JSON.stringify({
+              quantity,
+              getPrice,
+              usdJpy,
+              cashId,
+              changedPrice,
+            }),
           }
         );
         if (updatedStock === null) {

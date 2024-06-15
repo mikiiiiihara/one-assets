@@ -12,4 +12,6 @@ export type UpdateUsStockInput = {
   getPrice: number;
   quantity: number;
   usdjpy: number;
+  cashId?: string;
+  changedPrice?: number;
 };

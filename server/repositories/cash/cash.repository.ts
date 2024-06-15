@@ -20,6 +20,21 @@ export const List = async (userId: string): Promise<CashModel[]> => {
 
   return cachData;
 };
+
+export const Get = async (id: string): Promise<CashModel | null> => {
+  const cash = await prismaClient.cash.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      sector: true,
+    },
+  });
+  if (!cash) throw new Error("Cash not found");
+  return cash;
+};
+
 export const Create = async (data: CreateCashInput): Promise<CashModel> => {
   const newCash = await prismaClient.cash.create({
     data: {

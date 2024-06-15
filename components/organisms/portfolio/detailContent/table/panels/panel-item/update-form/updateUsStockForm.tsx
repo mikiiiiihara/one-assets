@@ -25,54 +25,6 @@ const Component: FC<Props> = ({ detail, currentUsdJpy, cashes }) => {
   const [cashId, setCashId] = useState("");
   const [isChecked, setIsChecked] = useState(false);
 
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
-
-  const onSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    //更新
-    const updatedUsStock = await updateUsStock(
-      detail.id,
-      quantity,
-      getPrice,
-      usdJpy
-    );
-
-    // 資産情報のstateも更新
-    if (updatedUsStock) {
-      setAssets((prev) => {
-        return prev.map((asset) => {
-          if (asset.id === updatedUsStock.id) {
-            return {
-              ...asset,
-              quantity: updatedUsStock.quantity,
-              getPrice: updatedUsStock.getPrice,
-              usdJpy: updatedUsStock.usdjpy,
-            };
-          } else {
-            return asset;
-          }
-        });
-      });
-    }
-    alert("更新しました！");
-  };
-
-  const onDelete = async () => {
-    if (confirm("本当に削除しますか？")) {
-      const deletedUsStock = await deleteUsStock(detail.id);
-
-      // 資産情報のstateも更新
-      if (deletedUsStock) {
-        setAssets((prev) => {
-          return prev.filter((asset) => asset.id !== deletedUsStock.id);
-        });
-      }
-      alert("削除しました！");
-    }
-  };
-
   // 変更分の計算処理
   const currentGetPriceUSD =
     Math.round((detail.getPrice / currentUsdJpy) * 100) / 100;
@@ -95,6 +47,72 @@ const Component: FC<Props> = ({ detail, currentUsdJpy, cashes }) => {
   const comparedCashPrice =
     cash?.sector === "USD" ? changedPriceUSD : changedPriceJPY;
   const isEnoughCash = cash ? cash.price >= comparedCashPrice : true;
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  const onSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    //更新
+    const updatedUsStock = await updateUsStock(
+      detail.id,
+      quantity,
+      getPrice,
+      usdJpy,
+      isChecked ? cashId : undefined,
+      isChecked ? comparedCashPrice : undefined
+    );
+
+    // 資産情報のstateも更新
+    if (updatedUsStock) {
+      setAssets((prev) => {
+        return prev.map((asset) => {
+          if (asset.id === updatedUsStock.id) {
+            return {
+              ...asset,
+              quantity: updatedUsStock.quantity,
+              getPrice: updatedUsStock.getPrice,
+              usdJpy: updatedUsStock.usdjpy,
+            };
+          } else {
+            return asset;
+          }
+        });
+      });
+    }
+    // cashも更新
+    if (isChecked) {
+      setAssets((prev) => {
+        return prev.map((asset) => {
+          if (asset.id === cashId) {
+            return {
+              ...asset,
+              getPriceTotal: asset.getPriceTotal - comparedCashPrice,
+            };
+          } else {
+            return asset;
+          }
+        });
+      });
+    }
+
+    alert("更新しました！");
+  };
+
+  const onDelete = async () => {
+    if (confirm("本当に削除しますか？")) {
+      const deletedUsStock = await deleteUsStock(detail.id);
+
+      // 資産情報のstateも更新
+      if (deletedUsStock) {
+        setAssets((prev) => {
+          return prev.filter((asset) => asset.id !== deletedUsStock.id);
+        });
+      }
+      alert("削除しました！");
+    }
+  };
   return (
     <>
       <form onSubmit={onSumbit}>
