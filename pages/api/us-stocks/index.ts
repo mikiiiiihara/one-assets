@@ -44,6 +44,8 @@ export default async function handler(
     sector: req.body.sector,
     usdjpy: req.body.usdjpy,
     userId: session.user.id,
+    cashId: req.body.cashId,
+    changedPrice: req.body.changedPrice,
   };
 
   try {

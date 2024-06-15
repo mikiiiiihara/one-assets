@@ -5,6 +5,8 @@ export type CreateUsStockInput = {
   sector: string;
   usdjpy: number;
   userId: string;
+  cashId?: string;
+  changedPrice?: number;
 };
 
 export type UpdateUsStockInput = {
@@ -12,6 +14,12 @@ export type UpdateUsStockInput = {
   getPrice: number;
   quantity: number;
   usdjpy: number;
+  cashId?: string;
+  changedPrice?: number;
+};
+
+export type DeleteUsStockInput = {
+  id: string;
   cashId?: string;
   changedPrice?: number;
 };

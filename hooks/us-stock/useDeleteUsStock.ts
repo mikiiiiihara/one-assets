@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import useFetchAPI from "../useFetchApi";
 import { UsStockModel } from "@server/repositories/stock/us/us-stock.model";
+import { DeleteUsStockInput } from "@server/repositories/stock/us/input";
 
 const useDeleteUsStock = () => {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -8,8 +9,9 @@ const useDeleteUsStock = () => {
   const fetchApi = useFetchAPI();
 
   const deleteUsStock = useCallback(
-    async (id: string) => {
+    async (input: DeleteUsStockInput) => {
       setIsDeleting(true);
+      const { id, cashId, changedPrice } = input;
       try {
         const deletedStock = await fetchApi<UsStockModel>(
           `/api/us-stocks/${id}`,
@@ -19,6 +21,10 @@ const useDeleteUsStock = () => {
             headers: {
               "Content-Type": "application/json",
             },
+            body: JSON.stringify({
+              cashId,
+              changedPrice,
+            }),
           }
         );
         if (deletedStock === null) {

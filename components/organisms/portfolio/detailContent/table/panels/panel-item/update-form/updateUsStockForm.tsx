@@ -6,6 +6,7 @@ import { useAssetsContext } from "contexts/assetsContext";
 import useDeleteUsStock from "@hooks/us-stock/useDeleteUsStock";
 import { DangerButton } from "@components/molecules/danger-button";
 import { CashModel } from "@server/repositories/cash/cash.model";
+import { DeleteUsStockInput } from "@server/repositories/stock/us/input";
 
 type Props = {
   detail: Detail;
@@ -24,6 +25,8 @@ const Component: FC<Props> = ({ detail, currentUsdJpy, cashes }) => {
   const [usdJpy, setUsdJpy] = useState(detail.usdJpy);
   const [cashId, setCashId] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+  const [isCheckedForDelete, setIsCheckedForDelete] = useState(false);
+  const [cashIdForDelete, setCashIdForDelete] = useState("");
 
   // 変更分の計算処理
   const currentGetPriceUSD =
@@ -50,6 +53,10 @@ const Component: FC<Props> = ({ detail, currentUsdJpy, cashes }) => {
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
+  };
+
+  const handleCheckboxChangeForDelete = () => {
+    setIsCheckedForDelete(!isCheckedForDelete);
   };
 
   const onSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -101,13 +108,40 @@ const Component: FC<Props> = ({ detail, currentUsdJpy, cashes }) => {
   };
 
   const onDelete = async () => {
-    if (confirm("本当に削除しますか？")) {
-      const deletedUsStock = await deleteUsStock(detail.id);
+    const soldPrice = Math.round(detail.price * detail.quantity * 100) / 100;
+    const myCash = cashes.find((cash) => cash.id === cashIdForDelete);
+    const isUsd = myCash?.sector === "USD";
+    if (confirm("本当に全て売却しますか？")) {
+      const input: DeleteUsStockInput = {
+        id: detail.id,
+        cashId: isCheckedForDelete ? cashIdForDelete : undefined,
+        changedPrice: isCheckedForDelete
+          ? isUsd
+            ? soldPrice / currentUsdJpy
+            : soldPrice
+          : undefined,
+      };
+      const deletedUsStock = await deleteUsStock(input);
 
       // 資産情報のstateも更新
       if (deletedUsStock) {
         setAssets((prev) => {
           return prev.filter((asset) => asset.id !== deletedUsStock.id);
+        });
+      }
+      // cashも更新
+      if (isCheckedForDelete) {
+        setAssets((prev) => {
+          return prev.map((asset) => {
+            if (asset.id === cashIdForDelete) {
+              return {
+                ...asset,
+                getPriceTotal: asset.getPriceTotal + comparedCashPrice,
+              };
+            } else {
+              return asset;
+            }
+          });
         });
       }
       alert("削除しました！");
@@ -198,11 +232,40 @@ const Component: FC<Props> = ({ detail, currentUsdJpy, cashes }) => {
         />
         {error && <div className="text-red-500 mt-2">{error}</div>}
       </form>
-      <DangerButton
-        className="ml-1 mt-2"
-        content={!isDeleting ? "削除" : "削除中..."}
-        onClick={onDelete}
-      />
+      <div className="mt-8">
+        <DangerButton
+          className="ml-1 mt-2"
+          content={!isDeleting ? "全て売却" : "売却中..."}
+          onClick={onDelete}
+        />
+        <p className="pb-1">
+          全売却分を現金情報に反映：
+          <input
+            type="checkbox"
+            checked={isCheckedForDelete}
+            onChange={handleCheckboxChangeForDelete}
+          />
+        </p>
+        {isCheckedForDelete && (
+          <p>
+            <select
+              className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+              value={cashIdForDelete}
+              onChange={(e) => setCashIdForDelete(e.target.value)}
+            >
+              <option value="" disabled>
+                選択してください
+              </option>
+              {cashes.map((cash) => (
+                <option key={cash.id} value={cash.id}>
+                  {cash.name}:{cash.sector == "JPY" ? "¥" : "$"}
+                  {cash.price.toLocaleString()}
+                </option>
+              ))}
+            </select>
+          </p>
+        )}
+      </div>
       {deleteError && <div className="text-red-500 mt-2">{deleteError}</div>}
     </>
   );

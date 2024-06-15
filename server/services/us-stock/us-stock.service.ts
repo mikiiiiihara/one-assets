@@ -5,6 +5,7 @@ import {
 import { UpdateCashInput } from "@server/repositories/cash/input";
 import {
   CreateUsStockInput,
+  DeleteUsStockInput,
   UpdateUsStockInput,
 } from "@server/repositories/stock/us/input";
 import { UsStockModel } from "@server/repositories/stock/us/us-stock.model";
@@ -26,8 +27,29 @@ export const usStocks = async (userId: string) => await List(userId);
 export const createUsStock = async (
   input: CreateUsStockInput
 ): Promise<UsStockModel> => {
-  const newStock = await Create(input);
-  return newStock;
+  return await prismaClient.$transaction(async (prisma) => {
+    const newStock = await Create(input);
+
+    // cashIdが連携されている場合、cashの更新を行う
+    if (input.cashId) {
+      const cash = await Get(input.cashId);
+      if (cash == null) throw new Error("Cash not found");
+
+      // cashIdとchangedPriceは両方揃っているはずなので、changedPriceが0&nullの場合はエラー
+      if (!input.changedPrice) {
+        throw new Error("changedPrice is required");
+      }
+
+      // cashの更新処理を行う
+      const updateCashInput: UpdateCashInput = {
+        id: cash.id,
+        price: cash.price - input.changedPrice,
+      };
+      await UpdateCash(updateCashInput);
+    }
+
+    return newStock;
+  });
 };
 
 /**
@@ -63,6 +85,28 @@ export const updateUsStock = async (
     return newStock;
   });
 };
-export const deleteUsStock = async (id: string): Promise<UsStockModel> => {
-  return await Delete(id);
+export const deleteUsStock = async (
+  input: DeleteUsStockInput
+): Promise<UsStockModel> => {
+  return await prismaClient.$transaction(async (prisma) => {
+    const deletedStock = await Delete(input.id);
+    // cashIdが連携されている場合、cashの更新を行う
+    if (input.cashId) {
+      const cash = await Get(input.cashId);
+      if (cash == null) throw new Error("Cash not found");
+
+      // cashIdとchangedPriceは両方揃っているはずなので、changedPriceが0&nullの場合はエラー
+      if (!input.changedPrice) {
+        throw new Error("changedPrice is required");
+      }
+
+      // cashの更新処理を行う
+      const updateCashInput: UpdateCashInput = {
+        id: cash.id,
+        price: cash.price + input.changedPrice,
+      };
+      await UpdateCash(updateCashInput);
+    }
+    return deletedStock;
+  });
 };

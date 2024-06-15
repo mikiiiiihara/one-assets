@@ -4,6 +4,8 @@ import { PrimaryButton } from "@components/molecules/primary-button";
 import { CreateFixedIncomeAssetForm } from "./create-fixed-income-asset-form";
 import { TextTitle1 } from "@components/atoms/text/textTitle1";
 import { Center } from "@components/atoms/center";
+import useCashes from "@hooks/cashes/useCashes";
+import { Loading } from "@components/atoms/loading";
 
 type Props = {
   currentUsdJpy: number;
@@ -14,12 +16,17 @@ const DISPLAY_MODE = {
 };
 
 const Component: FC<Props> = ({ currentUsdJpy }) => {
+  // 現在の現金情報を取得
+  const { cashes, isLoading, error } = useCashes();
   const [displayMode, setDisplayMode] = useState(DISPLAY_MODE.usStock);
-
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error: {error}</div>;
   const renderForm = () => {
     switch (displayMode) {
       case DISPLAY_MODE.usStock:
-        return <CreateUsStockForm currentUsdJpy={currentUsdJpy} />;
+        return (
+          <CreateUsStockForm currentUsdJpy={currentUsdJpy} cashes={cashes} />
+        );
       case DISPLAY_MODE.fixedIncomeAsset:
         return <CreateFixedIncomeAssetForm />;
       default:

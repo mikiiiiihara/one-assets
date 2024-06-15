@@ -1,4 +1,7 @@
-import { UpdateUsStockInput } from "@server/repositories/stock/us/input";
+import {
+  DeleteUsStockInput,
+  UpdateUsStockInput,
+} from "@server/repositories/stock/us/input";
 import { UsStockModel } from "@server/repositories/stock/us/us-stock.model";
 import {
   deleteUsStock,
@@ -61,7 +64,12 @@ export default async function handler(
 
   if (req.method === "DELETE") {
     try {
-      const deletedStock = await deleteUsStock(id as string);
+      const input: DeleteUsStockInput = {
+        id: id as string,
+        cashId: req.body.cashId,
+        changedPrice: req.body.changedPrice,
+      };
+      const deletedStock = await deleteUsStock(input);
       res.status(200).json(deletedStock);
     } catch (error) {
       console.error("Request error", error);

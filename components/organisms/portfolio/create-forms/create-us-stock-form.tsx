@@ -4,12 +4,14 @@ import { Asset } from "@server/services/asset/asset";
 import { useAssetsContext } from "contexts/assetsContext";
 import React, { FC, useState } from "react";
 import { SECTOR_LIST } from "./sector-list";
+import { CashModel } from "@server/repositories/cash/cash.model";
 
 type Props = {
   currentUsdJpy: number;
+  cashes: CashModel[];
 };
 
-const Component: FC<Props> = ({ currentUsdJpy }) => {
+const Component: FC<Props> = ({ currentUsdJpy, cashes }) => {
   const { isCreating, createUsStock, error } = useCreateUsStock();
   const { setAssets } = useAssetsContext();
   const [code, setCode] = useState("");
@@ -17,6 +19,17 @@ const Component: FC<Props> = ({ currentUsdJpy }) => {
   const [getPrice, setGetPrice] = useState(0);
   const [sector, setSector] = useState("");
   const [usdJpy, setUsdJpy] = useState(currentUsdJpy);
+  const [cashId, setCashId] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+  // 現金情報に反映する場合、口座の金額が足りているか？
+  const cash = cashes.find((cash) => cash.id === cashId);
+  // ドル建てか円建てかで判定方法を変える
+  const comparedCashPrice =
+    cash?.sector === "USD" ? getPrice * quantity : getPrice * quantity * usdJpy;
+  const isEnoughCash = cash ? cash.price >= comparedCashPrice : true;
   const onSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // バリデーション
@@ -36,7 +49,9 @@ const Component: FC<Props> = ({ currentUsdJpy }) => {
       getPrice,
       quantity,
       sector,
-      usdJpy
+      usdJpy,
+      isChecked ? cashId : undefined,
+      isChecked ? comparedCashPrice : undefined
     );
     // 資産情報のstateも更新
     if (createdUsStock) {
@@ -57,6 +72,21 @@ const Component: FC<Props> = ({ currentUsdJpy }) => {
       };
       setAssets((prev) => {
         return [...prev, createdAsset];
+      });
+    }
+    // cashも更新
+    if (isChecked) {
+      setAssets((prev) => {
+        return prev.map((asset) => {
+          if (asset.id === cashId) {
+            return {
+              ...asset,
+              getPriceTotal: asset.getPriceTotal - comparedCashPrice,
+            };
+          } else {
+            return asset;
+          }
+        });
       });
     }
     alert(`${code}を追加しました！`);
@@ -125,10 +155,44 @@ const Component: FC<Props> = ({ currentUsdJpy }) => {
           見積価格：¥{" "}
           {Math.round(getPrice * usdJpy * quantity).toLocaleString()}
         </p>
+        <div>
+          <p className="pb-1">
+            変更分を現金情報に反映：
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={handleCheckboxChange}
+            />
+          </p>
+          {isChecked && (
+            <p>
+              <select
+                className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+                value={cashId}
+                onChange={(e) => setCashId(e.target.value)}
+              >
+                <option value="" disabled>
+                  選択してください
+                </option>
+                {cashes.map((cash) => (
+                  <option key={cash.id} value={cash.id}>
+                    {cash.name}:{cash.sector == "JPY" ? "¥" : "$"}
+                    {cash.price.toLocaleString()}
+                  </option>
+                ))}
+              </select>
+              {isChecked && !isEnoughCash && (
+                <span className="text-red-500">金額が足りません</span>
+              )}
+            </p>
+          )}
+        </div>
       </div>
+
       <PrimaryButton
         className="ml-1"
         content={!isCreating ? "追加" : "追加中..."}
+        disabled={isChecked && !isEnoughCash}
         type="submit"
       />
       {error && <div className="text-red-500 mt-2">{error}</div>}

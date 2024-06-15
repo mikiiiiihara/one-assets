@@ -13,7 +13,9 @@ const useCreateUsStock = () => {
       getPrice: number,
       quantity: number,
       sector: string,
-      usdjpy: number
+      usdjpy: number,
+      cashId?: string,
+      changedPrice?: number
     ) => {
       setIsCreating(true);
       try {
@@ -25,7 +27,15 @@ const useCreateUsStock = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ code, getPrice, quantity, sector, usdjpy }),
+            body: JSON.stringify({
+              code,
+              getPrice,
+              quantity,
+              sector,
+              usdjpy,
+              cashId,
+              changedPrice,
+            }),
           }
         );
         if (newStock === null) {
