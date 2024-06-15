@@ -3,6 +3,8 @@ import { Detail } from "@components/organisms/portfolio/types";
 import { UpdateUsStockForm } from "./updateUsStockForm";
 import { UpdateCashForm } from "./updateCashForm";
 import { UpdateJapanFundForm } from "./updateJapanFundForm";
+import useCashes from "@hooks/cashes/useCashes";
+import { Loading } from "@components/atoms/loading";
 
 type Props = {
   detail: Detail;
@@ -10,10 +12,18 @@ type Props = {
 };
 
 const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
+  // 現在の現金情報を取得
+  const { cashes, isLoading, error } = useCashes();
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error: {error}</div>;
   switch (detail.group) {
     case "usStock":
       return (
-        <UpdateUsStockForm detail={detail} currentUsdJpy={currentUsdJpy} />
+        <UpdateUsStockForm
+          detail={detail}
+          currentUsdJpy={currentUsdJpy}
+          cashes={cashes}
+        />
       );
     case "cash":
       return <UpdateCashForm detail={detail} currentUsdJpy={currentUsdJpy} />;

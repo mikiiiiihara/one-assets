@@ -5,13 +5,15 @@ import useUpdateUsStock from "@hooks/us-stock/useUpdateUsStock";
 import { useAssetsContext } from "contexts/assetsContext";
 import useDeleteUsStock from "@hooks/us-stock/useDeleteUsStock";
 import { DangerButton } from "@components/molecules/danger-button";
+import { CashModel } from "@server/repositories/cash/cash.model";
 
 type Props = {
   detail: Detail;
   currentUsdJpy: number;
+  cashes: CashModel[];
 };
 
-const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
+const Component: FC<Props> = ({ detail, currentUsdJpy, cashes }) => {
   const { isUpdating, updateUsStock, error } = useUpdateUsStock();
   const { isDeleting, deleteUsStock, error: deleteError } = useDeleteUsStock();
   const { setAssets } = useAssetsContext();
@@ -20,6 +22,12 @@ const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
     Math.round((detail.getPrice / currentUsdJpy) * 100) / 100
   );
   const [usdJpy, setUsdJpy] = useState(detail.usdJpy);
+  const [cashId, setCashId] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
 
   const onSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -64,6 +72,19 @@ const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
       alert("削除しました！");
     }
   };
+
+  // 変更分の計算処理
+  const currentGetPriceUSD =
+    Math.round((detail.getPrice / currentUsdJpy) * 100) / 100;
+  const isChanged =
+    quantity == detail.quantity && getPrice == currentGetPriceUSD;
+  // 変更差分
+  const changedPriceUSD =
+    Math.round(
+      (getPrice * quantity - currentGetPriceUSD * detail.quantity) * 100
+    ) / 100;
+  const changedPriceJPY =
+    Math.round(changedPriceUSD * currentUsdJpy * 100) / 100;
   return (
     <>
       <form onSubmit={onSumbit}>
@@ -98,6 +119,39 @@ const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
               placeholder="例:150.2"
             />
           </p>
+          <p className="pb-1">
+            追加発生費用：{" "}
+            {isChanged ? "$0" : `$${changedPriceUSD}(¥${changedPriceJPY})`}
+          </p>
+          <div>
+            <p className="pb-1">
+              変更分を現金情報に反映：
+              <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={handleCheckboxChange}
+              />
+            </p>
+            {isChecked && (
+              <p>
+                <select
+                  className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+                  value={cashId}
+                  onChange={(e) => setCashId(e.target.value)}
+                >
+                  <option value="" disabled>
+                    選択してください
+                  </option>
+                  {cashes.map((cash) => (
+                    <option key={cash.id} value={cash.name}>
+                      {cash.name}:{cash.sector == "JPY" ? "¥" : "$"}
+                      {cash.price.toLocaleString()}
+                    </option>
+                  ))}
+                </select>
+              </p>
+            )}
+          </div>
         </div>
         <PrimaryButton
           className="ml-1"

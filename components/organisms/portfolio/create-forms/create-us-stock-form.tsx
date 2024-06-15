@@ -122,7 +122,8 @@ const Component: FC<Props> = ({ currentUsdJpy }) => {
           />
         </p>
         <p className="pb-1">
-          見積価格：¥ {Math.round(getPrice * usdJpy * quantity)}
+          見積価格：¥{" "}
+          {Math.round(getPrice * usdJpy * quantity).toLocaleString()}
         </p>
       </div>
       <PrimaryButton

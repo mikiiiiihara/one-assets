@@ -1,7 +1,14 @@
 import { CashModel } from "@server/repositories/cash/cash.model";
-import { Delete, Update } from "@server/repositories/cash/cash.repository";
+import {
+  Delete,
+  List,
+  Update,
+} from "@server/repositories/cash/cash.repository";
 import { UpdateCashInput } from "@server/repositories/cash/input";
 
+export const getCashes = async (userId: string): Promise<CashModel[]> => {
+  return await List(userId);
+};
 /**
  * Update a cash
  *
