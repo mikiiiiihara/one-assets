@@ -1,6 +1,10 @@
 import prismaClient from "@server/lib/prisma-client";
 import { JapanStockModel } from "./japan-stock.model";
-import { CreateJapanStockInput } from "./input";
+import {
+  CreateJapanStockInput,
+  DeleteJapanStockInput,
+  UpdateJapanStockInput,
+} from "./input";
 
 export const List = async (userId: string): Promise<JapanStockModel[]> => {
   const japanStocks = await prismaClient.japanStock.findMany({
@@ -78,5 +82,61 @@ export const Create = async (
     name: currentPrice.name,
     currentPrice: currentPrice.price,
     dividends: currentPrice.dividend,
+  };
+};
+
+export const Update = async (
+  input: UpdateJapanStockInput
+): Promise<JapanStockModel> => {
+  const updatedStock = await prismaClient.japanStock.update({
+    where: { id: input.id },
+    data: {
+      getPrice: input.getPrice,
+      quantity: input.quantity,
+    },
+    select: {
+      id: true,
+      code: true,
+      getPrice: true,
+      quantity: true,
+      sector: true,
+    },
+  });
+
+  // 現在価格を取得する
+  const currentPrice = await prismaClient.japanStockPrice.findFirst({
+    where: { code: updatedStock.code },
+    select: {
+      name: true,
+      code: true,
+      price: true,
+      dividend: true,
+    },
+  });
+  if (!currentPrice) throw new Error("Fund Price not found");
+  return {
+    ...updatedStock,
+    name: currentPrice.name,
+    currentPrice: currentPrice.price,
+    dividends: currentPrice.dividend,
+  };
+};
+
+export const Delete = async (id: string): Promise<JapanStockModel> => {
+  const deletedStock = await prismaClient.japanStock.delete({
+    where: { id },
+    select: {
+      id: true,
+      code: true,
+      getPrice: true,
+      quantity: true,
+      sector: true,
+    },
+  });
+  return {
+    ...deletedStock,
+    name: "",
+    currentPrice: 0,
+    dividends: 0,
   };
 };
