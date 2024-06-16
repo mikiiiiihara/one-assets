@@ -108,18 +108,15 @@ const Component: FC<Props> = ({ detail, currentUsdJpy, cashes }) => {
   };
 
   const onDelete = async () => {
-    const soldPrice = Math.round(detail.price * detail.quantity * 100) / 100;
+    const soldPriceJpy = Math.round(detail.price * detail.quantity * 100) / 100;
     const myCash = cashes.find((cash) => cash.id === cashIdForDelete);
     const isUsd = myCash?.sector === "USD";
+    const soldPrice = isUsd ? soldPriceJpy / currentUsdJpy : soldPriceJpy;
     if (confirm("本当に全て売却しますか？")) {
       const input: DeleteUsStockInput = {
         id: detail.id,
         cashId: isCheckedForDelete ? cashIdForDelete : undefined,
-        changedPrice: isCheckedForDelete
-          ? isUsd
-            ? soldPrice / currentUsdJpy
-            : soldPrice
-          : undefined,
+        changedPrice: isCheckedForDelete ? soldPrice : undefined,
       };
       const deletedUsStock = await deleteUsStock(input);
 
@@ -136,7 +133,7 @@ const Component: FC<Props> = ({ detail, currentUsdJpy, cashes }) => {
             if (asset.id === cashIdForDelete) {
               return {
                 ...asset,
-                getPriceTotal: asset.getPriceTotal + comparedCashPrice,
+                getPriceTotal: asset.getPriceTotal + soldPrice,
               };
             } else {
               return asset;

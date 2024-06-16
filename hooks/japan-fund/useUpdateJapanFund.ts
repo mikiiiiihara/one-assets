@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import useFetchAPI from "../useFetchApi";
 import { JapanFundModel } from "@server/repositories/japan-fund/japan-fund.model";
+import { UpdateJapanFundInput } from "@server/repositories/japan-fund/input";
 
 const useUpdateJapanFund = () => {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -8,14 +9,10 @@ const useUpdateJapanFund = () => {
   const fetchApi = useFetchAPI();
 
   const updateJapanFund = useCallback(
-    async (
-      id: string,
-      name: string,
-      code: string,
-      getPriceTotal: number,
-      getPrice: number
-    ) => {
+    async (input: UpdateJapanFundInput) => {
       setIsUpdating(true);
+      const { id, name, code, getPriceTotal, getPrice, cashId, changedPrice } =
+        input;
       try {
         const updateJapanFund = await fetchApi<JapanFundModel>(
           `/api/japan-funds/${id}`,
@@ -25,7 +22,14 @@ const useUpdateJapanFund = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name, code, getPriceTotal, getPrice }),
+            body: JSON.stringify({
+              name,
+              code,
+              getPriceTotal,
+              getPrice,
+              cashId,
+              changedPrice,
+            }),
           }
         );
         if (updateJapanFund === null) {

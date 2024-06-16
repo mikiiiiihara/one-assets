@@ -98,3 +98,17 @@ export const Update = async (
   if (!fundPrice) throw new Error("Fund Price not found");
   return { ...updatedFund, currentPrice: fundPrice.price };
 };
+
+export const Delete = async (id: string): Promise<JapanFundModel> => {
+  const deletedFund = await prismaClient.japanFund.delete({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      getPriceTotal: true,
+      getPrice: true,
+    },
+  });
+  return { ...deletedFund, currentPrice: 0 };
+};

@@ -102,8 +102,6 @@ const Component: FC<Props> = ({ detail, cashes }) => {
 
   const onDelete = async () => {
     const soldPrice = Math.round(detail.price * detail.quantity * 100) / 100;
-    const myCash = cashesJpy.find((cash) => cash.id === cashIdForDelete);
-    const isUsd = myCash?.sector === "USD";
     if (confirm("本当に全て売却しますか？")) {
       const input: DeleteUsStockInput = {
         id: detail.id,
@@ -125,7 +123,7 @@ const Component: FC<Props> = ({ detail, cashes }) => {
             if (asset.id === cashIdForDelete) {
               return {
                 ...asset,
-                getPriceTotal: asset.getPriceTotal + changedPrice,
+                getPriceTotal: asset.getPriceTotal + soldPrice,
               };
             } else {
               return asset;

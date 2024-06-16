@@ -12,4 +12,12 @@ export type UpdateJapanFundInput = {
   code: string;
   getPriceTotal: number;
   getPrice: number;
+  cashId?: string;
+  changedPrice?: number;
+};
+
+export type DeleteJapanFundInput = {
+  id: string;
+  cashId?: string;
+  changedPrice?: number;
 };
