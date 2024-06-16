@@ -3,7 +3,7 @@ import {
   Create,
   GetLatest,
   List,
-} from "@server/repositories/asset-history/asset.history.repository";
+} from "@server/repositories/asset-history/asset-history.repository";
 import { IdList } from "@server/repositories/user/user.repository";
 import { List as UsStockList } from "@server/repositories/stock/us/us-stock.repository";
 import { List as JapanFundList } from "@server/repositories/japan-fund/japan-fund.repository";
