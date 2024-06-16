@@ -7,9 +7,16 @@ import {
 } from "@server/services/asset-history/asset-history.service";
 
 export default async function handler(
-  _req: NextApiRequest,
+  req: NextApiRequest,
   res: NextApiResponse<AssetCreatedResponse | ErrorResponse>
 ) {
+  const authHeader = req.headers["authorization"];
+  if (
+    !process.env.CRON_SECRET ||
+    authHeader !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return res.status(401).json({ message: "Unauthorized." });
+  }
   const response = await CreateAssetHistory();
   return res.json(response);
 }
