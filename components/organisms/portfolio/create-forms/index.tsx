@@ -6,12 +6,14 @@ import { TextTitle1 } from "@components/atoms/text/textTitle1";
 import { Center } from "@components/atoms/center";
 import useCashes from "@hooks/cashes/useCashes";
 import { Loading } from "@components/atoms/loading";
+import { CreateJapanStockForm } from "./create-japan-stock-form";
 
 type Props = {
   currentUsdJpy: number;
 };
 const DISPLAY_MODE = {
   usStock: "usStock",
+  japanStock: "japanStock",
   fixedIncomeAsset: "fixedIncomeAsset",
 };
 
@@ -27,6 +29,8 @@ const Component: FC<Props> = ({ currentUsdJpy }) => {
         return (
           <CreateUsStockForm currentUsdJpy={currentUsdJpy} cashes={cashes} />
         );
+      case DISPLAY_MODE.japanStock:
+        return <CreateJapanStockForm cashes={cashes} />;
       case DISPLAY_MODE.fixedIncomeAsset:
         return <CreateFixedIncomeAssetForm />;
       default:
@@ -44,6 +48,11 @@ const Component: FC<Props> = ({ currentUsdJpy }) => {
           content="米国株"
           notSelected={displayMode !== DISPLAY_MODE.usStock}
           onClick={() => setDisplayMode(DISPLAY_MODE.usStock)}
+        />
+        <PrimaryButton
+          content="日本株"
+          notSelected={displayMode !== DISPLAY_MODE.japanStock}
+          onClick={() => setDisplayMode(DISPLAY_MODE.japanStock)}
         />
         <PrimaryButton
           content="固定利回り資産"

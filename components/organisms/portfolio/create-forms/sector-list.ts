@@ -23,4 +23,6 @@ export const SECTOR_LIST = [
   { id: 22, name: "other" },
   { id: 23, name: "Aerospace & Defence" },
   { id: 24, name: "retail" },
+  { id: 25, name: "trading" },
+  { id: 26, name: "insurance" },
 ];

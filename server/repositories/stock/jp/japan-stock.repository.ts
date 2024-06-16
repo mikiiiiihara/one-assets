@@ -1,10 +1,6 @@
 import prismaClient from "@server/lib/prisma-client";
 import { JapanStockModel } from "./japan-stock.model";
-import {
-  CreateJapanStockInput,
-  DeleteJapanStockInput,
-  UpdateJapanStockInput,
-} from "./input";
+import { CreateJapanStockInput, UpdateJapanStockInput } from "./input";
 
 export const List = async (userId: string): Promise<JapanStockModel[]> => {
   const japanStocks = await prismaClient.japanStock.findMany({

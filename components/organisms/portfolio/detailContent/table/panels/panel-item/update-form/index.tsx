@@ -1,10 +1,11 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { Detail } from "@components/organisms/portfolio/types";
 import { UpdateUsStockForm } from "./updateUsStockForm";
 import { UpdateCashForm } from "./updateCashForm";
 import { UpdateJapanFundForm } from "./updateJapanFundForm";
 import useCashes from "@hooks/cashes/useCashes";
 import { Loading } from "@components/atoms/loading";
+import { UpdateJapanStockForm } from "./updateJapanStockForm";
 
 type Props = {
   detail: Detail;
@@ -25,6 +26,8 @@ const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
           cashes={cashes}
         />
       );
+    case "japanStock":
+      return <UpdateJapanStockForm detail={detail} cashes={cashes} />;
     case "cash":
       return <UpdateCashForm detail={detail} currentUsdJpy={currentUsdJpy} />;
     case "japanFund":

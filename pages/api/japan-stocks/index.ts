@@ -46,6 +46,7 @@ export default async function handler(
     changedPrice: req.body.changedPrice,
   };
 
+  console.log("Request body", input);
   try {
     const newStock = await createJapanStock(input);
     res.status(201).json(newStock);
