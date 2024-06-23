@@ -101,7 +101,7 @@ describe("UsStockRepository", () => {
         adjDividend: 0.85,
         dividend: 0.85,
         recordDate: `${currentYear}-${currentMonth}-${currentDay}`,
-        paymentDate: `${currentYear}-${currentMonth}-${String(currentDate.getDate() + 7).padStart(2, "0")}`,
+        paymentDate: `${currentYear}-${currentMonth}-${String(currentDate.getDate() + 2).padStart(2, "0")}`,
         declarationDate: `${currentYear}-${currentMonth}-${String(currentDate.getDate() - 7).padStart(2, "0")}`,
       },
       {
@@ -110,7 +110,7 @@ describe("UsStockRepository", () => {
         adjDividend: 0.82,
         dividend: 0.82,
         recordDate: `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${String(threeMonthsAgo.getDate() + 2).padStart(2, "0")}`,
-        paymentDate: `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${String(threeMonthsAgo.getDate() + 8).padStart(2, "0")}`,
+        paymentDate: `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${String(threeMonthsAgo.getDate() + 2).padStart(2, "0")}`,
         declarationDate: `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${String(threeMonthsAgo.getDate() - 2).padStart(2, "0")}`,
       },
     ],
@@ -130,7 +130,7 @@ describe("UsStockRepository", () => {
       {
         fixedDate: new Date(`${currentYear}-${currentMonth}-${currentDay}`),
         paymentDate: new Date(
-          `${currentYear}-${currentMonth}-${String(currentDate.getDate() + 7).padStart(2, "0")}`
+          `${currentYear}-${currentMonth}-${String(currentDate.getDate() + 2).padStart(2, "0")}`
         ),
         price: 0.85,
       },
@@ -139,7 +139,7 @@ describe("UsStockRepository", () => {
           `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${threeMonthsAgoDay}`
         ),
         paymentDate: new Date(
-          `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${String(threeMonthsAgo.getDate() + 8).padStart(2, "0")}`
+          `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${String(threeMonthsAgo.getDate() + 2).padStart(2, "0")}`
         ),
         price: 0.82,
       },

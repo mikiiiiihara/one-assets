@@ -1,6 +1,7 @@
 import prismaClient from "@server/lib/prisma-client";
 import { JapanStockModel } from "./japan-stock.model";
 import { CreateJapanStockInput, UpdateJapanStockInput } from "./input";
+import { fetchJapanStockPrices } from "@server/adapters/yahoo-finance/stock/stock.adapter";
 
 export const List = async (userId: string): Promise<JapanStockModel[]> => {
   const japanStocks = await prismaClient.japanStock.findMany({
@@ -29,17 +30,25 @@ export const List = async (userId: string): Promise<JapanStockModel[]> => {
     },
   });
 
-  return japanStocks.map((stock) => {
-    const stockPrice = currentPrices.find((price) => price.code === stock.code);
-    if (!stockPrice)
-      throw new Error(`Japan stock price not found: ${stock.code}`);
-    return {
-      ...stock,
-      name: stockPrice.name,
-      currentPrice: stockPrice.price,
-      dividends: stockPrice.dividend,
-    };
-  });
+  const result = await Promise.all(
+    japanStocks.map(async (stock) => {
+      const stockPrice = currentPrices.find(
+        (price) => price.code === stock.code
+      );
+      if (!stockPrice) {
+        throw new Error(`Japan stock price not found: ${stock.code}`);
+      }
+      const currentPrice = await fetchJapanStockPrices(stock.code);
+      return {
+        ...stock,
+        name: stockPrice.name,
+        currentPrice,
+        dividends: stockPrice.dividend,
+      };
+    })
+  );
+
+  return result;
 };
 
 export const Create = async (
@@ -73,10 +82,11 @@ export const Create = async (
     },
   });
   if (!currentPrice) throw new Error("Fund Price not found");
+  const currentMarketPrice = await fetchJapanStockPrices(newStock.code);
   return {
     ...newStock,
     name: currentPrice.name,
-    currentPrice: currentPrice.price,
+    currentPrice: currentMarketPrice,
     dividends: currentPrice.dividend,
   };
 };
@@ -110,10 +120,11 @@ export const Update = async (
     },
   });
   if (!currentPrice) throw new Error("Fund Price not found");
+  const currentMarketPrice = await fetchJapanStockPrices(updatedStock.code);
   return {
     ...updatedStock,
     name: currentPrice.name,
-    currentPrice: currentPrice.price,
+    currentPrice: currentMarketPrice,
     dividends: currentPrice.dividend,
   };
 };
