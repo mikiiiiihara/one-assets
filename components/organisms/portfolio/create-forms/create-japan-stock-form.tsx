@@ -4,7 +4,6 @@ import { useAssetsContext } from "contexts/assetsContext";
 import React, { FC, useState } from "react";
 import { SECTOR_LIST } from "./sector-list";
 import { CashModel } from "@server/repositories/cash/cash.model";
-import useJapanStockPrices from "@hooks/japan-stock-prices/useJapanStockPrices";
 import useCreateJapanStock from "@hooks/japan-stock/useCreateJapanStock";
 import { buildDividendOfJapanStock } from "@server/services/asset";
 
@@ -14,11 +13,12 @@ type Props = {
 
 const Component: FC<Props> = ({ cashes }) => {
   const { isCreating, createJapanStock, error } = useCreateJapanStock();
-  const { stockPrices } = useJapanStockPrices();
   const { setAssets } = useAssetsContext();
   const [code, setCode] = useState("");
+  const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [getPrice, setGetPrice] = useState(0);
+  const [dividends, setDividends] = useState(0);
   const [sector, setSector] = useState("");
   const [cashId, setCashId] = useState("");
   const [isChecked, setIsChecked] = useState(false);
@@ -40,8 +40,10 @@ const Component: FC<Props> = ({ cashes }) => {
     //追加
     const createdJapanStock = await createJapanStock(
       code,
+      name,
       getPrice,
       quantity,
+      dividends,
       sector,
       isChecked ? cashId : undefined,
       isChecked ? comparedCashPrice : undefined
@@ -88,31 +90,24 @@ const Component: FC<Props> = ({ cashes }) => {
     <form onSubmit={onSumbit}>
       <div className="mb-4 mt-4">
         <p className="pb-1">
-          銘柄：
-          <select
+          銘柄コード：
+          <input
             className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+            type="text"
             value={code}
-            onChange={(e) => {
-              const code = e.target.value;
-              setCode(code);
-              // priceにも反映する
-              const stockPrice = stockPrices.find(
-                (stockPrice) => stockPrice.code === code
-              );
-              if (stockPrice) {
-                setGetPrice(stockPrice.price);
-              }
-            }}
-          >
-            <option value="" disabled>
-              選択してください
-            </option>
-            {stockPrices.map((stockPrice) => (
-              <option key={stockPrice.id} value={stockPrice.code}>
-                {stockPrice.name}
-              </option>
-            ))}
-          </select>
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="例:8058"
+          />
+        </p>
+        <p className="pb-1">
+          銘柄名：
+          <input
+            className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="例:三菱商事"
+          />
         </p>
         <p className="pb-1">
           保有株数：
@@ -132,6 +127,16 @@ const Component: FC<Props> = ({ cashes }) => {
             value={getPrice}
             onChange={(e) => setGetPrice(Number(e.target.value))}
             placeholder="例:50"
+          />
+        </p>
+        <p className="pb-1">
+          1年当たり配当額：¥
+          <input
+            className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+            type="number"
+            value={dividends}
+            onChange={(e) => setDividends(Number(e.target.value))}
+            placeholder="例:120"
           />
         </p>
         <p className="pb-1">

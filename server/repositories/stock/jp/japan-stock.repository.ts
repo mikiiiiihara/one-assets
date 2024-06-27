@@ -12,38 +12,22 @@ export const List = async (userId: string): Promise<JapanStockModel[]> => {
     select: {
       id: true,
       code: true,
+      name: true,
       getPrice: true,
       quantity: true,
+      dividends: true,
       sector: true,
     },
   });
 
   if (japanStocks.length === 0) return [];
 
-  // fundsの現在価格を取得する
-  const currentPrices = await prismaClient.japanStockPrice.findMany({
-    select: {
-      name: true,
-      code: true,
-      price: true,
-      dividend: true,
-    },
-  });
-
   const result = await Promise.all(
     japanStocks.map(async (stock) => {
-      const stockPrice = currentPrices.find(
-        (price) => price.code === stock.code
-      );
-      if (!stockPrice) {
-        throw new Error(`Japan stock price not found: ${stock.code}`);
-      }
       const currentPrice = await fetchJapanStockPrices(stock.code);
       return {
         ...stock,
-        name: stockPrice.name,
         currentPrice,
-        dividends: stockPrice.dividend,
       };
     })
   );
@@ -57,37 +41,28 @@ export const Create = async (
   const newStock = await prismaClient.japanStock.create({
     data: {
       code: data.code,
+      name: data.name,
       getPrice: data.getPrice,
       quantity: data.quantity,
+      dividends: data.dividends,
       sector: data.sector,
       userId: data.userId,
     },
     select: {
       id: true,
       code: true,
+      name: true,
       getPrice: true,
       quantity: true,
+      dividends: true,
       sector: true,
     },
   });
 
-  // 現在価格を取得する
-  const currentPrice = await prismaClient.japanStockPrice.findFirst({
-    where: { code: newStock.code },
-    select: {
-      name: true,
-      code: true,
-      price: true,
-      dividend: true,
-    },
-  });
-  if (!currentPrice) throw new Error("Fund Price not found");
   const currentMarketPrice = await fetchJapanStockPrices(newStock.code);
   return {
     ...newStock,
-    name: currentPrice.name,
     currentPrice: currentMarketPrice,
-    dividends: currentPrice.dividend,
   };
 };
 
@@ -97,35 +72,26 @@ export const Update = async (
   const updatedStock = await prismaClient.japanStock.update({
     where: { id: input.id },
     data: {
+      name: input.name,
       getPrice: input.getPrice,
       quantity: input.quantity,
+      dividends: input.dividends,
     },
     select: {
       id: true,
       code: true,
+      name: true,
       getPrice: true,
       quantity: true,
+      dividends: true,
       sector: true,
     },
   });
 
-  // 現在価格を取得する
-  const currentPrice = await prismaClient.japanStockPrice.findFirst({
-    where: { code: updatedStock.code },
-    select: {
-      name: true,
-      code: true,
-      price: true,
-      dividend: true,
-    },
-  });
-  if (!currentPrice) throw new Error("Fund Price not found");
   const currentMarketPrice = await fetchJapanStockPrices(updatedStock.code);
   return {
     ...updatedStock,
-    name: currentPrice.name,
     currentPrice: currentMarketPrice,
-    dividends: currentPrice.dividend,
   };
 };
 
@@ -135,15 +101,15 @@ export const Delete = async (id: string): Promise<JapanStockModel> => {
     select: {
       id: true,
       code: true,
+      name: true,
       getPrice: true,
       quantity: true,
+      dividends: true,
       sector: true,
     },
   });
   return {
     ...deletedStock,
-    name: "",
     currentPrice: 0,
-    dividends: 0,
   };
 };

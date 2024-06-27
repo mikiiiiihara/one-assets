@@ -11,7 +11,8 @@ const useUpdateJapanStock = () => {
   const updateJapanStock = useCallback(
     async (input: UpdateJapanStockInput) => {
       setIsUpdating(true);
-      const { id, quantity, getPrice, cashId, changedPrice } = input;
+      const { id, name, quantity, getPrice, dividends, cashId, changedPrice } =
+        input;
       try {
         const updatedStock = await fetchApi<JapanStockModel>(
           `/api/japan-stocks/${id}`,
@@ -22,8 +23,10 @@ const useUpdateJapanStock = () => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              name,
               quantity,
               getPrice,
+              dividends,
               cashId,
               changedPrice,
             }),

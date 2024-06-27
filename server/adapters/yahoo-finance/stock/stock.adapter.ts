@@ -8,7 +8,6 @@ export const fetchJapanStockPrices = async (code: string): Promise<number> => {
     const response = await axiosClient.get(`/v8/finance/chart/${code}.T`);
     // return response.data; // APIからの生データをそのまま返す
     const price = response.data.chart.result[0].meta;
-    console.log(price.symbol, price.regularMarketPrice);
     return price.regularMarketPrice;
   } catch (error) {
     console.error("Error fetching stock prices:", error);

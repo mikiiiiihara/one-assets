@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
 import useFetchAPI from "../useFetchApi";
-import { CreateJapanStockInput } from "@server/repositories/stock/jp/input";
 import { JapanStockModel } from "@server/repositories/stock/jp/japan-stock.model";
 
 const useCreateJapanStock = () => {
@@ -11,8 +10,10 @@ const useCreateJapanStock = () => {
   const createJapanStock = useCallback(
     async (
       code: string,
+      name: string,
       getPrice: number,
       quantity: number,
+      dividends: number,
       sector: string,
       cashId?: string,
       changedPrice?: number
@@ -29,8 +30,10 @@ const useCreateJapanStock = () => {
             },
             body: JSON.stringify({
               code,
+              name,
               getPrice,
               quantity,
+              dividends,
               sector,
               cashId,
               changedPrice,

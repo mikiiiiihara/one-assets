@@ -33,19 +33,24 @@ export default async function handler(
 
   if (req.method === "PUT") {
     if (
+      typeof req.body.name !== "string" ||
       typeof req.body.quantity !== "number" ||
+      typeof req.body.dividends !== "number" ||
       typeof req.body.getPrice !== "number"
     ) {
       res.status(400).json({
-        message: "Invalid type for quantity, or getPrice, expected a number",
+        message:
+          "Invalid type for name, quantity, dividends, or getPrice, expected a number",
       });
       return;
     }
 
     const input: UpdateJapanStockInput = {
       id: id as string,
+      name: req.body.name,
       quantity: req.body.quantity,
       getPrice: req.body.getPrice,
+      dividends: req.body.dividends,
       cashId: req.body.cashId,
       changedPrice: req.body.changedPrice,
     };

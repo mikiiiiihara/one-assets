@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "JapanStock" ADD COLUMN     "dividend" DOUBLE PRECISION NOT NULL DEFAULT 0;

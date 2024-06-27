@@ -1,7 +1,9 @@
 export type CreateJapanStockInput = {
   code: string;
+  name: string;
   getPrice: number;
   quantity: number;
+  dividends: number;
   sector: string;
   userId: string;
   cashId?: string;
@@ -10,8 +12,10 @@ export type CreateJapanStockInput = {
 
 export type UpdateJapanStockInput = {
   id: string;
+  name: string;
   getPrice: number;
   quantity: number;
+  dividends: number;
   cashId?: string;
   changedPrice?: number;
 };

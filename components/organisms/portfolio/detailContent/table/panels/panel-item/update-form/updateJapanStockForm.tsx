@@ -7,6 +7,7 @@ import { CashModel } from "@server/repositories/cash/cash.model";
 import { DeleteUsStockInput } from "@server/repositories/stock/us/input";
 import useDeleteJapanStock from "@hooks/japan-stock/useDeleteJapanStock";
 import useUpdateJapanStock from "@hooks/japan-stock/useUpdateJapanStock";
+import { buildDividendOfJapanStock } from "@server/services/asset";
 
 type Props = {
   detail: Detail;
@@ -21,10 +22,16 @@ const Component: FC<Props> = ({ detail, cashes }) => {
     error: deleteError,
   } = useDeleteJapanStock();
   const { setAssets } = useAssetsContext();
+  const [name, setName] = useState(detail.name);
   const [quantity, setQuantity] = useState(detail.quantity);
   const [getPrice, setGetPrice] = useState(
     Math.round(detail.getPrice * 100) / 100
   );
+  const currentDividends = detail.dividend.reduce(
+    (acc, cur) => acc + cur.price / 0.8,
+    0
+  );
+  const [dividends, setDividends] = useState(currentDividends);
   const [cashId, setCashId] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [isCheckedForDelete, setIsCheckedForDelete] = useState(false);
@@ -35,7 +42,11 @@ const Component: FC<Props> = ({ detail, cashes }) => {
 
   // 変更分の計算処理
   const currentGetPrice = Math.round(detail.getPrice * 100) / 100;
-  const isChanged = quantity != detail.quantity || getPrice != currentGetPrice;
+  const isChanged =
+    quantity != detail.quantity ||
+    getPrice != currentGetPrice ||
+    name != detail.name ||
+    currentDividends != dividends;
   // 変更差分
   const changedPrice =
     Math.round(
@@ -56,23 +67,27 @@ const Component: FC<Props> = ({ detail, cashes }) => {
   const onSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //更新
-    const updatedUsStock = await updateJapanStock({
+    const updatedJapanStock = await updateJapanStock({
       id: detail.id,
+      name,
       quantity,
       getPrice,
+      dividends,
       cashId: isChecked ? cashId : undefined,
       changedPrice: isChecked ? changedPrice : undefined,
     });
 
     // 資産情報のstateも更新
-    if (updatedUsStock) {
+    if (updatedJapanStock) {
       setAssets((prev) => {
         return prev.map((asset) => {
-          if (asset.id === updatedUsStock.id) {
+          if (asset.id === updatedJapanStock.id) {
             return {
               ...asset,
-              quantity: updatedUsStock.quantity,
-              getPrice: updatedUsStock.getPrice,
+              name: updatedJapanStock.name,
+              quantity: updatedJapanStock.quantity,
+              getPrice: updatedJapanStock.getPrice,
+              dividends: buildDividendOfJapanStock(updatedJapanStock.dividends),
               usdJpy: 1,
             };
           } else {
@@ -139,6 +154,16 @@ const Component: FC<Props> = ({ detail, cashes }) => {
       <form onSubmit={onSumbit}>
         <div className="mb-4 mt-4">
           <p className="pb-1">
+            銘柄名：
+            <input
+              className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="例:三菱商事"
+            />
+          </p>
+          <p className="pb-1">
             保有株数：
             <input
               className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
@@ -156,6 +181,16 @@ const Component: FC<Props> = ({ detail, cashes }) => {
               value={getPrice}
               onChange={(e) => setGetPrice(Number(e.target.value))}
               placeholder="例:50"
+            />
+          </p>
+          <p className="pb-1">
+            1年当たり配当額：¥
+            <input
+              className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+              type="number"
+              value={dividends}
+              onChange={(e) => setDividends(Number(e.target.value))}
+              placeholder="例:120"
             />
           </p>
           <p className="pb-1">

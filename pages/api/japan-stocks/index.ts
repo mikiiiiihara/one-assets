@@ -22,31 +22,33 @@ export default async function handler(
     res.status(401).json({ message: "You must be logged in." });
     return;
   }
-
+  console.log(typeof req.body.dividends);
   if (
     typeof req.body.code !== "string" ||
+    typeof req.body.name !== "string" ||
     typeof req.body.getPrice !== "number" ||
     typeof req.body.quantity !== "number" ||
+    typeof req.body.dividends !== "number" ||
     typeof req.body.sector !== "string"
   ) {
     res.status(400).json({
       message:
-        "Invalid type for code, getPrice, quantity, or sector, expected correct types",
+        "Invalid type for code, name,getPrice, quantity, or sector, expected correct types",
     });
     return;
   }
 
   const input: CreateJapanStockInput = {
     code: req.body.code,
+    name: req.body.name,
     getPrice: req.body.getPrice,
     quantity: req.body.quantity,
+    dividends: req.body.dividends,
     sector: req.body.sector,
     userId: session.user.id,
     cashId: req.body.cashId,
     changedPrice: req.body.changedPrice,
   };
-
-  console.log("Request body", input);
   try {
     const newStock = await createJapanStock(input);
     res.status(201).json(newStock);
