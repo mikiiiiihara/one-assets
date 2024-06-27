@@ -13,6 +13,7 @@ const useCreateUsStock = () => {
       getPrice: number,
       quantity: number,
       sector: string,
+      isNoTax: boolean,
       usdjpy: number,
       cashId?: string,
       changedPrice?: number
@@ -32,6 +33,7 @@ const useCreateUsStock = () => {
               getPrice,
               quantity,
               sector,
+              isNoTax,
               usdjpy,
               cashId,
               changedPrice,

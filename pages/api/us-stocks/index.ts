@@ -43,6 +43,7 @@ export default async function handler(
     quantity: req.body.quantity,
     sector: req.body.sector,
     usdjpy: req.body.usdjpy,
+    isNoTax: req.body.isNoTax || false,
     userId: session.user.id,
     cashId: req.body.cashId,
     changedPrice: req.body.changedPrice,

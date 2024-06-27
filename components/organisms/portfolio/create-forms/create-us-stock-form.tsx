@@ -21,6 +21,7 @@ const Component: FC<Props> = ({ currentUsdJpy, cashes }) => {
   const [usdJpy, setUsdJpy] = useState(currentUsdJpy);
   const [cashId, setCashId] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+  const [isNISA, setIsNISA] = useState(false);
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
@@ -49,6 +50,7 @@ const Component: FC<Props> = ({ currentUsdJpy, cashes }) => {
       getPrice,
       quantity,
       sector,
+      isNISA,
       usdJpy,
       isChecked ? cashId : undefined,
       isChecked ? comparedCashPrice : undefined
@@ -151,6 +153,27 @@ const Component: FC<Props> = ({ currentUsdJpy, cashes }) => {
             onChange={(e) => setUsdJpy(Number(e.target.value))}
             placeholder="例:150.2"
           />
+        </p>
+        <p className="pb-1">
+          NISA口座か？：
+          <input
+            type="radio"
+            id="nisa-true"
+            name="nisa"
+            value="true"
+            checked={isNISA === true}
+            onChange={() => setIsNISA(!isNISA)}
+          />
+          <label htmlFor="nisa-true">はい</label>
+          <input
+            type="radio"
+            id="nisa-false"
+            name="nisa"
+            value="false"
+            checked={isNISA === false}
+            onChange={() => setIsNISA(!isNISA)}
+          />
+          <label htmlFor="nisa-false">いいえ</label>
         </p>
         <p className="pb-1">
           見積価格：¥{" "}
