@@ -75,11 +75,7 @@ const AssetPanelItemComponent: FC<Props> = ({
           <Modal>
             <div className="justify-between items-center">
               <p className="text-2xl">{data.name}</p>
-              {data.sector == "japanStock" ? (
-                <p className="text-lg">{data.code}</p>
-              ) : (
-                <></>
-              )}
+              {data.isNoTax ? <p>NISA</p> : <></>}
               {data.sector !== "fixedIncomeAsset" ? (
                 <div>
                   <p className="text-xl text-right">
