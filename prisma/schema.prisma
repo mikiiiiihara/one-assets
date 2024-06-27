@@ -143,16 +143,6 @@ model JapanFundPrice {
   updatedAt         DateTime @updatedAt
 }
 
-model JapanStockPrice {
-  id                String  @id @default(cuid())
-  name              String
-  code              String
-  price             Float
-  dividend          Float
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-}
-
 model Cash {
   id                String  @id @default(cuid())
   name              String
