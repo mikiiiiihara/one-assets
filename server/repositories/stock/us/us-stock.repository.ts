@@ -23,6 +23,7 @@ export const List = async (
       quantity: true,
       sector: true,
       usdjpy: true,
+      isNoTax: true,
     },
   });
   if (stocks.length === 0) return [];
@@ -65,6 +66,7 @@ export const Get = async (id: string): Promise<UsStockModel | null> => {
       quantity: true,
       sector: true,
       usdjpy: true,
+      isNoTax: true,
     },
   });
   if (!stock) throw new Error("Stock not found");
@@ -100,6 +102,7 @@ export const Create = async (
       quantity: true,
       sector: true,
       usdjpy: true,
+      isNoTax: true,
     },
   });
   // 株価情報を取得
@@ -133,6 +136,7 @@ export const Update = async (
       quantity: true,
       sector: true,
       usdjpy: true,
+      isNoTax: true,
     },
   });
 
@@ -160,6 +164,7 @@ export const Delete = async (id: string): Promise<UsStockModel> => {
       quantity: true,
       sector: true,
       usdjpy: true,
+      isNoTax: true,
     },
   });
   return {

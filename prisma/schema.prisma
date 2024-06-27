@@ -83,6 +83,7 @@ model UsStock {
   quantity          Int
   sector            String
   usdjpy            Float
+  isNoTax           Boolean @default(false)
   userId            String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -96,6 +97,7 @@ model JapanStock {
   quantity          Int
   dividends          Float @default(0)
   sector            String
+  isNoTax           Boolean @default(false)
   userId            String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt

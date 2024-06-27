@@ -36,6 +36,10 @@ export type UsStockModel = {
    */
   currentRate: number;
   /**
+   * 非課税対象か？
+   */
+  isNoTax: boolean;
+  /**
    * １年当たり配当
    */
   dividends: Dividend[];

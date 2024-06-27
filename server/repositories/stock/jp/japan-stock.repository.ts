@@ -17,6 +17,7 @@ export const List = async (userId: string): Promise<JapanStockModel[]> => {
       quantity: true,
       dividends: true,
       sector: true,
+      isNoTax: true,
     },
   });
 
@@ -56,6 +57,7 @@ export const Create = async (
       quantity: true,
       dividends: true,
       sector: true,
+      isNoTax: true,
     },
   });
 
@@ -85,6 +87,7 @@ export const Update = async (
       quantity: true,
       dividends: true,
       sector: true,
+      isNoTax: true,
     },
   });
 
@@ -106,6 +109,7 @@ export const Delete = async (id: string): Promise<JapanStockModel> => {
       quantity: true,
       dividends: true,
       sector: true,
+      isNoTax: true,
     },
   });
   return {

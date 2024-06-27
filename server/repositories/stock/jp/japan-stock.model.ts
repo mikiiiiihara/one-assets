@@ -31,4 +31,8 @@ export type JapanStockModel = {
    * １年当たり配当
    */
   dividends: number;
+  /**
+   * 非課税対象か？
+   */
+  isNoTax: boolean;
 };
