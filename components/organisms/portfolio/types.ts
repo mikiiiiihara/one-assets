@@ -19,6 +19,7 @@ export type Detail = {
   balance: number;
   balanceRate: number;
   group: string;
+  isNoTax: boolean;
 };
 
 export type AssetsSummary = {

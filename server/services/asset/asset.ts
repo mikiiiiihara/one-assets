@@ -14,4 +14,5 @@ export type Asset = {
   sector: string;
   usdJpy: number;
   group: string;
+  isNoTax: boolean;
 };

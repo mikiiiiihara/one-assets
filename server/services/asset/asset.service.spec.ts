@@ -36,6 +36,7 @@ describe("getAssets", () => {
       sector: "Technology",
       usdjpy: 110,
       priceGets: [],
+      isNoTax: false,
     },
   ];
 
@@ -49,6 +50,7 @@ describe("getAssets", () => {
       quantity: 5,
       sector: "Automotive",
       dividends: [],
+      isNoTax: false,
     },
   ];
 
@@ -124,6 +126,7 @@ describe("getAssets", () => {
         sector: "Technology",
         usdJpy: 110,
         group: "usStock",
+        isNoTax: false,
       },
       {
         code: "7203",
@@ -139,6 +142,7 @@ describe("getAssets", () => {
         sector: "Automotive",
         usdJpy: 1,
         group: "japanStock",
+        isNoTax: false,
       },
       {
         code: "fund1",
@@ -154,6 +158,7 @@ describe("getAssets", () => {
         sector: "japanFund",
         usdJpy: 0,
         group: "japanFund",
+        isNoTax: false,
       },
       {
         code: "BTC",
@@ -169,6 +174,7 @@ describe("getAssets", () => {
         sector: "crypto",
         usdJpy: 1,
         group: "crypto",
+        isNoTax: false,
       },
       {
         code: "bond1",
@@ -184,6 +190,7 @@ describe("getAssets", () => {
         sector: "fixedIncomeAsset",
         usdJpy: 110,
         group: "fixedIncomeAsset",
+        isNoTax: false,
       },
       {
         code: "USD",
@@ -199,6 +206,7 @@ describe("getAssets", () => {
         sector: "cash",
         usdJpy: 1,
         group: "cash",
+        isNoTax: false,
       },
     ]);
   });

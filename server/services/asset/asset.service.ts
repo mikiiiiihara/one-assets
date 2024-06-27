@@ -25,6 +25,7 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
       quantity: usStock.quantity,
       sector: usStock.sector,
       usdJpy: usStock.usdjpy,
+      isNoTax: usStock.isNoTax,
       group: "usStock",
     });
   });
@@ -44,6 +45,7 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
       quantity: japanStock.quantity,
       sector: japanStock.sector,
       usdJpy: 1,
+      isNoTax: japanStock.isNoTax,
       group: "japanStock",
     });
   });
@@ -63,6 +65,7 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
       quantity: 0,
       sector: "japanFund",
       usdJpy: 0,
+      isNoTax: false,
       group: "japanFund",
     });
   });
@@ -82,6 +85,7 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
       quantity: crypto.quantity,
       sector: "crypto",
       usdJpy: 1,
+      isNoTax: false,
       group: "crypto",
     });
   });
@@ -101,6 +105,7 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
       quantity: 1,
       sector: "fixedIncomeAsset",
       usdJpy: fixedIncomeAsset.usdjpy,
+      isNoTax: false,
       group: "fixedIncomeAsset",
     });
   });
@@ -120,6 +125,7 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
       quantity: 1,
       sector: cash.sector,
       usdJpy: 1,
+      isNoTax: false,
       group: "cash",
     });
   });

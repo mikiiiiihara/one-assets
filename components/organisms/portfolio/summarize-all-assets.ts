@@ -56,33 +56,30 @@ export const summarizeAllAssets = (
 
 // 米国株式のサマリーを計算
 const calculateUsStock = (asset: Asset, fx: number): Detail => {
-  const { id, usdJpy, code, name, quantity, priceGets, sector } = asset;
+  const { usdJpy, quantity } = asset;
   const getPrice = asset.getPrice * usdJpy;
   const price = asset.currentPrice * fx;
   const priceRate = asset.currentRate;
   const dividendAmount = calculateTotalDividendPrice(asset.dividends) * fx;
-  const sumOfDividend = quantity * (dividendAmount * 0.71);
+  const taxRate = asset.isNoTax ? 0.9 : 0.71;
+  const sumOfDividend = quantity * (dividendAmount * taxRate);
   const sumOfGetPrice = Math.round(quantity * getPrice * 10) / 10;
   const sumOfPrice = Math.round(quantity * price * 10) / 10;
   return {
-    id,
-    code,
-    name,
+    ...asset,
     quantity,
     getPrice,
     price,
-    priceGets,
     priceRate,
     dividend: asset.dividends.map((dividend) => {
       return {
         ...dividend,
-        price: Math.round(dividend.price * fx * 0.71 * 100) / 100,
+        price: Math.round(dividend.price * fx * taxRate * 100) / 100,
       };
     }),
     sumOfDividend: Math.round(sumOfDividend * 100) / 100,
     dividendRate:
-      Math.round(((dividendAmount * 0.71 * 100) / getPrice) * 100) / 100,
-    sector,
+      Math.round(((dividendAmount * taxRate * 100) / getPrice) * 100) / 100,
     usdJpy,
     sumOfGetPrice,
     sumOfPrice,
@@ -99,35 +96,30 @@ const calculateUsStock = (asset: Asset, fx: number): Detail => {
 
 // 日本株式のサマリーを計算
 const calculateJapanStock = (asset: Asset): Detail => {
-  const { id, usdJpy, code, name, quantity, priceGets, sector } = asset;
-  const getPrice = asset.getPrice;
+  const { quantity, getPrice } = asset;
   const price = asset.currentPrice;
   const priceRate = asset.currentRate;
   // TODO: 配当金額を計算
   const dividendAmount = calculateTotalDividendPrice(asset.dividends);
-  const sumOfDividend = quantity * (dividendAmount * 0.8);
+  const taxRate = asset.isNoTax ? 1 : 0.8;
+  const sumOfDividend = quantity * (dividendAmount * taxRate);
   const sumOfGetPrice = Math.round(quantity * getPrice * 10) / 10;
   const sumOfPrice = Math.round(quantity * price * 10) / 10;
   return {
-    id,
-    code,
-    name,
+    ...asset,
     quantity,
     getPrice,
     price,
-    priceGets,
     priceRate,
     dividend: asset.dividends.map((dividend) => {
       return {
         ...dividend,
-        price: Math.round(dividend.price * 0.8 * 100) / 100,
+        price: Math.round(dividend.price * taxRate * 100) / 100,
       };
     }),
     sumOfDividend: Math.round(sumOfDividend * 100) / 100,
     dividendRate:
-      Math.round(((dividendAmount * 0.71 * 100) / getPrice) * 100) / 100,
-    sector,
-    usdJpy,
+      Math.round(((dividendAmount * taxRate * 100) / getPrice) * 100) / 100,
     sumOfGetPrice,
     sumOfPrice,
     balance: Math.round((quantity * price - quantity * getPrice) * 10) / 10,
@@ -143,37 +135,20 @@ const calculateJapanStock = (asset: Asset): Detail => {
 
 // 日本投資信託のサマリーを計算
 const calculateJapanFund = (asset: Asset): Detail => {
-  const {
-    id,
-    usdJpy,
-    code,
-    name,
-    quantity,
-    priceGets,
-    sector,
-    getPrice,
-    getPriceTotal,
-    currentPrice,
-  } = asset;
+  const { getPrice, getPriceTotal, currentPrice } = asset;
   const priceRate = asset.currentRate;
 
   // 取得時総額、現在価格、取得価格から、評価総額を逆算
   const sumOfGetPrice = getPriceTotal;
   const sumOfPrice = (getPriceTotal * currentPrice) / getPrice;
   return {
-    id,
-    code,
-    name,
-    quantity,
+    ...asset,
     getPrice,
     price: currentPrice,
-    priceGets,
     priceRate,
     dividend: [],
     sumOfDividend: 0,
     dividendRate: 0,
-    sector,
-    usdJpy,
     sumOfGetPrice,
     sumOfPrice,
     balance: Math.round((sumOfPrice - getPriceTotal) * 10) / 10,
@@ -186,26 +161,21 @@ const calculateJapanFund = (asset: Asset): Detail => {
 
 // 仮想通貨のサマリーを計算
 const calculateCryptos = (asset: Asset): Detail => {
-  const { id, code, name, quantity, priceGets, sector, currentPrice } = asset;
-  const getPrice = asset.getPrice;
+  const { quantity, getPrice, currentPrice } = asset;
   const priceRate = asset.currentRate;
 
   const sumOfGetPrice = Math.round(quantity * getPrice * 10) / 10;
   // 合計評価額
   const sumOfPrice = Math.round(quantity * currentPrice * 10) / 10;
   return {
-    id,
-    code,
-    name,
+    ...asset,
     quantity,
     getPrice,
     price: currentPrice,
-    priceGets,
     priceRate,
     dividend: [],
     sumOfDividend: 0,
     dividendRate: 0,
-    sector,
     usdJpy: 1,
     sumOfGetPrice,
     sumOfPrice,
@@ -219,35 +189,18 @@ const calculateCryptos = (asset: Asset): Detail => {
 
 // 固定利回り資産のサマリーを計算
 const calculateFixedIncomeAsset = (asset: Asset): Detail => {
-  const {
-    id,
-    usdJpy,
-    code,
-    name,
-    quantity,
-    priceGets,
-    sector,
-    getPrice,
-    getPriceTotal,
-    currentPrice,
-  } = asset;
+  const { getPrice, getPriceTotal, currentPrice } = asset;
   const priceRate = asset.currentRate;
   const dividendAmount = calculateTotalDividendPrice(asset.dividends);
   const sumOfDividend = dividendAmount;
   return {
-    id,
-    code,
-    name,
-    quantity,
+    ...asset,
     getPrice,
     price: currentPrice,
-    priceGets,
     priceRate,
     dividend: asset.dividends,
     sumOfDividend,
     dividendRate: (100 * dividendAmount) / getPriceTotal,
-    sector,
-    usdJpy,
     sumOfGetPrice: getPriceTotal,
     sumOfPrice: getPriceTotal,
     balance: 0,
@@ -258,34 +211,17 @@ const calculateFixedIncomeAsset = (asset: Asset): Detail => {
 
 // 現金のサマリーを計算
 const calculateCash = (asset: Asset, fx: number): Detail => {
-  const {
-    id,
-    usdJpy,
-    code,
-    name,
-    quantity,
-    priceGets,
-    sector,
-    getPrice,
-    getPriceTotal,
-    currentPrice,
-  } = asset;
+  const { getPriceTotal, currentPrice, sector } = asset;
   const priceRate = asset.currentRate;
   const sumOfDividend = 0;
   return {
-    id,
-    code,
-    name,
-    quantity,
-    getPrice,
+    ...asset,
     price: currentPrice,
-    priceGets,
     priceRate,
     dividend: [],
     sumOfDividend,
     dividendRate: 0,
     sector,
-    usdJpy,
     sumOfGetPrice: sector == "JPY" ? getPriceTotal : getPriceTotal * fx,
     sumOfPrice: sector == "JPY" ? getPriceTotal : getPriceTotal * fx,
     balance: 0,
