@@ -15,6 +15,7 @@ const useCreateJapanStock = () => {
       quantity: number,
       dividends: number,
       sector: string,
+      isNoTax: boolean,
       cashId?: string,
       changedPrice?: number
     ) => {
@@ -35,6 +36,7 @@ const useCreateJapanStock = () => {
               quantity,
               dividends,
               sector,
+              isNoTax,
               cashId,
               changedPrice,
             }),

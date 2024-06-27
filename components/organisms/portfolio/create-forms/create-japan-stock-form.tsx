@@ -22,6 +22,7 @@ const Component: FC<Props> = ({ cashes }) => {
   const [sector, setSector] = useState("");
   const [cashId, setCashId] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+  const [isNISA, setIsNISA] = useState(false);
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
@@ -45,6 +46,7 @@ const Component: FC<Props> = ({ cashes }) => {
       quantity,
       dividends,
       sector,
+      isNISA,
       isChecked ? cashId : undefined,
       isChecked ? comparedCashPrice : undefined
     );
@@ -63,6 +65,7 @@ const Component: FC<Props> = ({ cashes }) => {
         quantity: createdJapanStock.quantity,
         sector: createdJapanStock.sector,
         usdJpy: 1,
+        isNoTax: createdJapanStock.isNoTax,
         group: "japanStock",
       };
       setAssets((prev) => {
@@ -155,6 +158,27 @@ const Component: FC<Props> = ({ cashes }) => {
               </option>
             ))}
           </select>
+        </p>
+        <p className="pb-1">
+          NISA口座か？：
+          <input
+            type="radio"
+            id="nisa-true"
+            name="nisa"
+            value="true"
+            checked={isNISA === true}
+            onChange={() => setIsNISA(!isNISA)}
+          />
+          <label htmlFor="nisa-true">はい</label>
+          <input
+            type="radio"
+            id="nisa-false"
+            name="nisa"
+            value="false"
+            checked={isNISA === false}
+            onChange={() => setIsNISA(!isNISA)}
+          />
+          <label htmlFor="nisa-false">いいえ</label>
         </p>
         <p className="pb-1">
           見積価格：¥ {Math.round(getPrice * quantity).toLocaleString()}

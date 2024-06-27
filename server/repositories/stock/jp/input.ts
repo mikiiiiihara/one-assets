@@ -5,6 +5,7 @@ export type CreateJapanStockInput = {
   quantity: number;
   dividends: number;
   sector: string;
+  isNoTax: boolean;
   userId: string;
   cashId?: string;
   changedPrice?: number;

@@ -93,6 +93,7 @@ export const Create = async (
       quantity: data.quantity,
       sector: data.sector,
       usdjpy: data.usdjpy,
+      isNoTax: data.isNoTax,
       userId: data.userId,
     },
     select: {

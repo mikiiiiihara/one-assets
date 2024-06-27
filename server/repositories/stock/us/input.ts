@@ -4,6 +4,7 @@ export type CreateUsStockInput = {
   quantity: number;
   sector: string;
   usdjpy: number;
+  isNoTax: boolean;
   userId: string;
   cashId?: string;
   changedPrice?: number;

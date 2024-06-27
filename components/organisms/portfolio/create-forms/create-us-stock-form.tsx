@@ -68,6 +68,7 @@ const Component: FC<Props> = ({ currentUsdJpy, cashes }) => {
         quantity: createdUsStock.quantity,
         sector: createdUsStock.sector,
         usdJpy: createdUsStock.usdjpy,
+        isNoTax: createdUsStock.isNoTax,
         group: "usStock",
       };
       setAssets((prev) => {

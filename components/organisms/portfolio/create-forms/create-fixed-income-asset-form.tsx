@@ -48,6 +48,7 @@ const Component = () => {
         quantity: 1,
         sector: "fixedIncomeAsset",
         usdJpy: createdFixedIncomeAsset.usdjpy,
+        isNoTax: false,
         group: "fixedIncomeAsset",
       };
       setAssets((prev) => {

@@ -22,7 +22,6 @@ export default async function handler(
     res.status(401).json({ message: "You must be logged in." });
     return;
   }
-  console.log(typeof req.body.dividends);
   if (
     typeof req.body.code !== "string" ||
     typeof req.body.name !== "string" ||
@@ -45,6 +44,7 @@ export default async function handler(
     quantity: req.body.quantity,
     dividends: req.body.dividends,
     sector: req.body.sector,
+    isNoTax: req.body.isNoTax || false,
     userId: session.user.id,
     cashId: req.body.cashId,
     changedPrice: req.body.changedPrice,

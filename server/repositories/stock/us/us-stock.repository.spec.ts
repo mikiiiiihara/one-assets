@@ -63,6 +63,7 @@ describe("UsStockRepository", () => {
       quantity: 10,
       sector: "Technology",
       usdjpy: 110.0,
+      isNoTax: false,
     },
   ];
   const mockUsStockMarketPrices: UsStockMarketPrice[] = [
@@ -126,6 +127,7 @@ describe("UsStockRepository", () => {
     currentPrice: 150,
     currentRate: 1.5,
     priceGets: 2,
+    isNoTax: false,
     dividends: [
       {
         fixedDate: new Date(`${currentYear}-${currentMonth}-${currentDay}`),
@@ -234,6 +236,7 @@ describe("UsStockRepository", () => {
         sector: "Technology",
         usdjpy: 110.0,
         userId: "user1",
+        isNoTax: false,
       });
       expect(result).toEqual(expectedStock);
     });

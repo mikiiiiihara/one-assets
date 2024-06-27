@@ -46,6 +46,7 @@ export const Create = async (
       getPrice: data.getPrice,
       quantity: data.quantity,
       dividends: data.dividends,
+      isNoTax: data.isNoTax,
       sector: data.sector,
       userId: data.userId,
     },
