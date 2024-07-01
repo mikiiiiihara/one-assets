@@ -27,8 +27,9 @@ const Component: FC<Props> = ({ detail, cashes }) => {
   const [getPrice, setGetPrice] = useState(
     Math.round(detail.getPrice * 100) / 100
   );
+  const taxRate = detail.isNoTax ? 1 : 0.8;
   const currentDividends = detail.dividend.reduce(
-    (acc, cur) => acc + cur.price / 0.8,
+    (acc, cur) => acc + cur.price / taxRate,
     0
   );
   const [dividends, setDividends] = useState(currentDividends);
