@@ -20,7 +20,7 @@ const Component: FC<Props> = ({ detail, currentUsdJpy, cashes }) => {
   const { setAssets } = useAssetsContext();
   const [quantity, setQuantity] = useState(detail.quantity);
   const [getPrice, setGetPrice] = useState(
-    Math.round((detail.getPrice / currentUsdJpy) * 100) / 100
+    Math.round((detail.getPrice / detail.usdJpy) * 100) / 100
   );
   const [usdJpy, setUsdJpy] = useState(detail.usdJpy);
   const [cashId, setCashId] = useState("");
