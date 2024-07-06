@@ -25,7 +25,8 @@ export const List = async (userId: string): Promise<JapanStockModel[]> => {
 
   const result = await Promise.all(
     japanStocks.map(async (stock) => {
-      const currentPrice = await fetchJapanStockPrices(stock.code);
+      const japanStockPrice = await fetchJapanStockPrices(stock.code);
+      const currentPrice = japanStockPrice.price;
       return {
         ...stock,
         currentPrice,
@@ -62,10 +63,11 @@ export const Create = async (
     },
   });
 
-  const currentMarketPrice = await fetchJapanStockPrices(newStock.code);
+  const japanStockPrice = await fetchJapanStockPrices(newStock.code);
+  const currentPrice = japanStockPrice.price;
   return {
     ...newStock,
-    currentPrice: currentMarketPrice,
+    currentPrice,
   };
 };
 
@@ -92,10 +94,11 @@ export const Update = async (
     },
   });
 
-  const currentMarketPrice = await fetchJapanStockPrices(updatedStock.code);
+  const japanStockPrice = await fetchJapanStockPrices(updatedStock.code);
+  const currentPrice = japanStockPrice.price;
   return {
     ...updatedStock,
-    currentPrice: currentMarketPrice,
+    currentPrice,
   };
 };
 
