@@ -87,6 +87,8 @@ model UsStock {
   userId            String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model JapanStock {
@@ -101,6 +103,8 @@ model JapanStock {
   userId            String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model JapanFund {
@@ -112,6 +116,8 @@ model JapanFund {
   userId            String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Crypto {
@@ -122,6 +128,8 @@ model Crypto {
   userId            String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model FixedIncomeAsset {
@@ -134,6 +142,8 @@ model FixedIncomeAsset {
   userId            String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model JapanFundPrice {
@@ -153,6 +163,8 @@ model Cash {
   userId            String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model AssetHistory {
@@ -165,4 +177,6 @@ model AssetHistory {
   userId            String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@index([userId,createdAt])
 }
