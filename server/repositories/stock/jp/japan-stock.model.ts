@@ -28,6 +28,14 @@ export type JapanStockModel = {
    */
   currentPrice: number;
   /**
+   * 変化額
+   */
+  priceGets: number;
+  /**
+   * 変化率
+   */
+  currentRate: number;
+  /**
    * １年当たり配当
    */
   dividends: number;

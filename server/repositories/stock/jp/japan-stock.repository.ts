@@ -25,11 +25,13 @@ export const List = async (userId: string): Promise<JapanStockModel[]> => {
 
   const result = await Promise.all(
     japanStocks.map(async (stock) => {
-      const japanStockPrice = await fetchJapanStockPrices(stock.code);
-      const currentPrice = japanStockPrice.price;
+      const { currentPrice, priceGets, currentRate } =
+        await buildJapanStockMarketPrice(stock.code);
       return {
         ...stock,
         currentPrice,
+        priceGets,
+        currentRate,
       };
     })
   );
@@ -63,11 +65,10 @@ export const Create = async (
     },
   });
 
-  const japanStockPrice = await fetchJapanStockPrices(newStock.code);
-  const currentPrice = japanStockPrice.price;
+  const marketPrice = await buildJapanStockMarketPrice(newStock.code);
   return {
     ...newStock,
-    currentPrice,
+    ...marketPrice,
   };
 };
 
@@ -94,11 +95,10 @@ export const Update = async (
     },
   });
 
-  const japanStockPrice = await fetchJapanStockPrices(updatedStock.code);
-  const currentPrice = japanStockPrice.price;
+  const marketPrice = await buildJapanStockMarketPrice(updatedStock.code);
   return {
     ...updatedStock,
-    currentPrice,
+    ...marketPrice,
   };
 };
 
@@ -119,5 +119,17 @@ export const Delete = async (id: string): Promise<JapanStockModel> => {
   return {
     ...deletedStock,
     currentPrice: 0,
+    priceGets: 0,
+    currentRate: 0,
+  };
+};
+
+const buildJapanStockMarketPrice = async (code: string) => {
+  const japanStockPrice = await fetchJapanStockPrices(code);
+  const priceGets = japanStockPrice.price - japanStockPrice.previousClosePrice;
+  return {
+    currentPrice: japanStockPrice.price,
+    priceGets,
+    currentRate: (priceGets / japanStockPrice.previousClosePrice) * 100,
   };
 };
