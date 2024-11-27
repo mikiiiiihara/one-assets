@@ -11,12 +11,16 @@ export default async function handler(
   res: NextApiResponse<AssetCreatedResponse | ErrorResponse>
 ) {
   const authHeader = req.headers["authorization"];
-  if (
-    !process.env.CRON_SECRET ||
-    authHeader !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
+  if (process.env.ENV !== "development" && checkCronSecret(authHeader)) {
     return res.status(401).json({ message: "Unauthorized." });
   }
   const response = await CreateAssetHistory();
   return res.json(response);
 }
+
+const checkCronSecret = (authHeader: string | undefined) => {
+  return (
+    !process.env.CRON_SECRET ||
+    authHeader !== `Bearer ${process.env.CRON_SECRET}`
+  );
+};
