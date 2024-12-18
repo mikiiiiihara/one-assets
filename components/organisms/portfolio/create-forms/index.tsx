@@ -7,6 +7,7 @@ import { Center } from "@components/atoms/center";
 import useCashes from "@hooks/cashes/useCashes";
 import { Loading } from "@components/atoms/loading";
 import { CreateJapanStockForm } from "./create-japan-stock-form";
+import { CreateCashForm } from "./create-cash-form";
 
 type Props = {
   currentUsdJpy: number;
@@ -15,6 +16,7 @@ const DISPLAY_MODE = {
   usStock: "usStock",
   japanStock: "japanStock",
   fixedIncomeAsset: "fixedIncomeAsset",
+  cash: "cash",
 };
 
 const Component: FC<Props> = ({ currentUsdJpy }) => {
@@ -33,6 +35,8 @@ const Component: FC<Props> = ({ currentUsdJpy }) => {
         return <CreateJapanStockForm cashes={cashes} />;
       case DISPLAY_MODE.fixedIncomeAsset:
         return <CreateFixedIncomeAssetForm />;
+      case DISPLAY_MODE.cash:
+        return <CreateCashForm />;
       default:
         return null;
     }
@@ -58,6 +62,11 @@ const Component: FC<Props> = ({ currentUsdJpy }) => {
           content="固定利回り資産"
           notSelected={displayMode !== DISPLAY_MODE.fixedIncomeAsset}
           onClick={() => setDisplayMode(DISPLAY_MODE.fixedIncomeAsset)}
+        />
+        <PrimaryButton
+          content="現金"
+          notSelected={displayMode !== DISPLAY_MODE.cash}
+          onClick={() => setDisplayMode(DISPLAY_MODE.cash)}
         />
       </div>
       {/* 選択値によってフォームを切り替える */}

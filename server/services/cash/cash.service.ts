@@ -1,14 +1,31 @@
 import { CashModel } from "@server/repositories/cash/cash.model";
 import {
+  Create,
   Delete,
   List,
   Update,
 } from "@server/repositories/cash/cash.repository";
-import { UpdateCashInput } from "@server/repositories/cash/input";
+import {
+  CreateCashInput,
+  UpdateCashInput,
+} from "@server/repositories/cash/input";
 
 export const getCashes = async (userId: string): Promise<CashModel[]> => {
   return await List(userId);
 };
+/**
+ * Create a cash
+ *
+ * @param input The data needed to update the cash.
+ * @returns The created cash object.
+ */
+export const createCash = async (
+  input: CreateCashInput
+): Promise<CashModel> => {
+  const newCash = await Create(input);
+  return newCash;
+};
+
 /**
  * Update a cash
  *
