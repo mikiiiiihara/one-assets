@@ -49,7 +49,7 @@ const AssetHistory: React.FC<Props> = ({ assetHistories }) => {
     ? "-"
     : (Math.round(priceRate * 100) / 100).toLocaleString();
 
-  // graphのseriesデータを計算
+  // graphのseriesデータ計算
   const series: StackedAreaType[] = [
     {
       name: "資産総額",
