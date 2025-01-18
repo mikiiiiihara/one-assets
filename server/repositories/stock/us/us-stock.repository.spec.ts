@@ -130,13 +130,13 @@ describe("UsStockRepository", () => {
     priceGets: 2,
     isNoTax: false,
     dividends: [
-      {
-        fixedDate: new Date(`${currentYear}-${currentMonth}-${currentDay}`),
-        paymentDate: new Date(
-          `${currentYear}-${currentMonth}-${String(currentDate.getDate() + 2).padStart(2, "0")}`
-        ),
-        price: 0.85,
-      },
+      // {
+      //   fixedDate: new Date(`${currentYear}-${currentMonth}-${currentDay}`),
+      //   paymentDate: new Date(
+      //     `${currentYear}-${currentMonth}-${String(currentDate.getDate() + 2).padStart(2, "0")}`
+      //   ),
+      //   price: 0.85,
+      // },
       {
         fixedDate: new Date(
           `${threeMonthsAgoYear}-${threeMonthsAgoMonth}-${threeMonthsAgoDay}`

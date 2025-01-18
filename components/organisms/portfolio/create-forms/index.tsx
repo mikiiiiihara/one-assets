@@ -8,6 +8,7 @@ import useCashes from "@hooks/cashes/useCashes";
 import { Loading } from "@components/atoms/loading";
 import { CreateJapanStockForm } from "./create-japan-stock-form";
 import { CreateCashForm } from "./create-cash-form";
+import { CreateCryptoForm } from "./craete-crypto-form";
 
 type Props = {
   currentUsdJpy: number;
@@ -15,6 +16,7 @@ type Props = {
 const DISPLAY_MODE = {
   usStock: "usStock",
   japanStock: "japanStock",
+  crypto: "crypto",
   fixedIncomeAsset: "fixedIncomeAsset",
   cash: "cash",
 };
@@ -33,6 +35,8 @@ const Component: FC<Props> = ({ currentUsdJpy }) => {
         );
       case DISPLAY_MODE.japanStock:
         return <CreateJapanStockForm cashes={cashes} />;
+      case DISPLAY_MODE.crypto:
+        return <CreateCryptoForm />;
       case DISPLAY_MODE.fixedIncomeAsset:
         return <CreateFixedIncomeAssetForm />;
       case DISPLAY_MODE.cash:
@@ -57,6 +61,11 @@ const Component: FC<Props> = ({ currentUsdJpy }) => {
           content="日本株"
           notSelected={displayMode !== DISPLAY_MODE.japanStock}
           onClick={() => setDisplayMode(DISPLAY_MODE.japanStock)}
+        />
+        <PrimaryButton
+          content="暗号通貨"
+          notSelected={displayMode !== DISPLAY_MODE.crypto}
+          onClick={() => setDisplayMode(DISPLAY_MODE.crypto)}
         />
         <PrimaryButton
           content="固定利回り資産"
