@@ -5,14 +5,31 @@ import {
 } from "@server/repositories/cash/cash.repository";
 import { UpdateCashInput } from "@server/repositories/cash/input";
 import {
+  CreateJapanFundInput,
   DeleteJapanFundInput,
   UpdateJapanFundInput,
 } from "@server/repositories/japan-fund/input";
 import { JapanFundModel } from "@server/repositories/japan-fund/japan-fund.model";
 import {
+  Create,
   Delete,
   Update,
 } from "@server/repositories/japan-fund/japan-fund.repository";
+
+/**
+ * Create a japan fund
+ *
+ * @param input The data needed to create the japan fund.
+ * @returns The created japan fund object.
+ */
+export const createJapanFund = async (
+  input: CreateJapanFundInput
+): Promise<JapanFundModel> => {
+  return await prismaClient.$transaction(async (prisma) => {
+    const newFund = await Create(input);
+    return newFund;
+  });
+};
 
 /**
  * Update a japan fund
