@@ -8,9 +8,25 @@ import { List as CryptoList } from "@server/repositories/crypto/crypto.repositor
 import { buildDividendOfFixedIncomeAsset, buildDividendOfJapanStock } from ".";
 
 export const getAssets = async (userId: string): Promise<Asset[]> => {
+  // 全ての資産タイプのデータを並列で取得
+  const [
+    usStocks,
+    japanStocks,
+    japanFunds,
+    cryptos,
+    fixedIncomeAssets,
+    cashes,
+  ] = await Promise.all([
+    UsStockList(userId, true),
+    JapanStockList(userId),
+    JapanFundList(userId),
+    CryptoList(userId),
+    FixedIncomeAssetList(userId),
+    CashList(userId),
+  ]);
+
   const assets: Asset[] = [];
   // 米国株式
-  const usStocks = await UsStockList(userId, true);
   usStocks.forEach((usStock) => {
     assets.push({
       code: usStock.code,
@@ -30,7 +46,6 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
     });
   });
   // 日本株式
-  const japanStocks = await JapanStockList(userId);
   japanStocks.forEach((japanStock) => {
     assets.push({
       code: japanStock.code,
@@ -50,7 +65,6 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
     });
   });
   // 日本投資信託
-  const japanFunds = await JapanFundList(userId);
   japanFunds.forEach((japanFund) => {
     assets.push({
       code: japanFund.code,
@@ -70,7 +84,6 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
     });
   });
   //　仮想通貨
-  const cryptos = await CryptoList(userId);
   cryptos.forEach((crypto) => {
     assets.push({
       code: crypto.code,
@@ -90,7 +103,6 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
     });
   });
   // 固定利回り資産
-  const fixedIncomeAssets = await FixedIncomeAssetList(userId);
   fixedIncomeAssets.forEach((fixedIncomeAsset) => {
     assets.push({
       code: fixedIncomeAsset.code,
@@ -110,7 +122,6 @@ export const getAssets = async (userId: string): Promise<Asset[]> => {
     });
   });
   // 現金
-  const cashes = await CashList(userId);
   cashes.forEach((cash) => {
     assets.push({
       code: cash.name,
