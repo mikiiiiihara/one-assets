@@ -9,22 +9,42 @@ export type Props = {
 
 const Top: React.FC<Props> = ({ name, signOut }) => {
   const router = useRouter();
+  const isPortfolioPage = router.pathname === "/portfolio";
+  const isAssetHistoryPage = router.pathname === "/";
+
   return (
-    <div className="text-center">
-      <p className="font-bold">{name}でログイン中</p>
-      <div className="flex m-6 justify-center">
-        <Button className="text-white" onClick={() => router.push("/")}>
-          資産推移
-        </Button>
-        <Button
-          className="text-white"
-          onClick={() => router.push("/portfolio")}
-        >
-          ポートフォリオ
-        </Button>
-        <Button className="bg-gray-500 text-white" onClick={() => signOut()}>
-          ログアウト
-        </Button>
+    <div className="card p-6 mb-8">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-lg">
+            {name.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-white">One Assets</h1>
+            <p className="text-gray-400 text-sm">{name}としてログイン中</p>
+          </div>
+        </div>
+        
+        <nav className="flex gap-3">
+          <Button
+            variant={isAssetHistoryPage ? "primary" : "ghost"}
+            onClick={() => router.push("/")}
+          >
+            資産推移
+          </Button>
+          <Button
+            variant={isPortfolioPage ? "primary" : "ghost"}
+            onClick={() => router.push("/portfolio")}
+          >
+            ポートフォリオ
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => signOut()}
+          >
+            ログアウト
+          </Button>
+        </nav>
       </div>
     </div>
   );

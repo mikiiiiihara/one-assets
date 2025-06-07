@@ -18,17 +18,17 @@ const MemoizedPie = React.memo(Pie); // Pieコンポーネントをメモ化
 
 const Component: FC<Props> = ({ details }) => {
   const themeDefault = [
-    "#007bff",
-    "#ff3333",
-    "#ffd700",
-    "#00d56a",
-    "orange",
-    "#00ced1",
-    "#6495ED",
-    "#ff5192",
-    "#ffff00",
-    "#66cc99",
-    "#ff9966",
+    "#1ECC9E", // Primary green
+    "#3B82F6", // Blue
+    "#EF4444", // Red
+    "#F59E0B", // Amber
+    "#8B5CF6", // Purple
+    "#06B6D4", // Cyan
+    "#EC4899", // Pink
+    "#10B981", // Emerald
+    "#F97316", // Orange
+    "#6366F1", // Indigo
+    "#84CC16", // Lime
   ];
   // 画面表示
   //表示切り替え用
@@ -60,11 +60,13 @@ const Component: FC<Props> = ({ details }) => {
           onClick={changeDisplayToSector}
         />
       </div>
-      <MemoizedPie
-        pieData={displayMode === DISPLAY_MODE.ticker ? pieData : sectorData}
-        themeColor={themeDefault}
-        background="#343a40"
-      />
+      <div className="card p-6">
+        <MemoizedPie
+          pieData={displayMode === DISPLAY_MODE.ticker ? pieData : sectorData}
+          themeColor={themeDefault}
+          background="transparent"
+        />
+      </div>
     </>
   );
 };

@@ -24,7 +24,7 @@ const StackedAreaComponent: FC<Props> = ({
   const options = {
     chart: {
       type: "area",
-      backgroundColor: background,
+      backgroundColor: "transparent",
     },
     title: {
       text: "",
@@ -32,12 +32,17 @@ const StackedAreaComponent: FC<Props> = ({
     exporting: { enabled: false },
     xAxis: {
       categories: xData,
-      crosshair: true,
+      crosshair: {
+        color: "rgba(30, 204, 158, 0.3)",
+        width: 1,
+      },
       labels: {
         style: {
-          color: "#ffffff", // xAxisラベルの色を白に設定
+          color: "#ffffff",
         },
       },
+      lineColor: "rgba(255, 255, 255, 0.2)",
+      tickColor: "rgba(255, 255, 255, 0.2)",
     },
     yAxis: {
       title: {
@@ -46,14 +51,23 @@ const StackedAreaComponent: FC<Props> = ({
       },
       labels: {
         style: {
-          color: "#ffffff", // xAxisラベルの色を白に設定
+          color: "#ffffff",
         },
       },
+      gridLineColor: "rgba(255, 255, 255, 0.1)",
+      lineColor: "rgba(255, 255, 255, 0.2)",
+      tickColor: "rgba(255, 255, 255, 0.2)",
     },
     tooltip: {
       shared: true,
       headerFormat:
         '<span style="font-size:12px"><b>{point.key}</b></span><br>',
+      backgroundColor: "rgba(10, 10, 10, 0.95)",
+      borderColor: "rgba(30, 204, 158, 0.3)",
+      borderRadius: 8,
+      style: {
+        color: "#ffffff",
+      },
     },
     plotOptions: {
       area: {

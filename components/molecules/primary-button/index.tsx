@@ -6,28 +6,33 @@ type Props = {
   type?: "submit";
   isForContent?: boolean;
   className?: string;
-  notSelected?: boolean; // 非活性の見た目にしたいときにtrueを指定
+  notSelected?: boolean;
   onClick?: (() => Promise<void>) | (() => void);
   disabled?: boolean;
+  size?: "sm" | "md" | "lg";
+  fullWidth?: boolean;
 };
+
 const PrimaryButtonComponent: React.FC<Props> = ({
-  content: content,
+  content,
   type,
   isForContent,
-  className,
+  className = "",
   notSelected,
   disabled,
   onClick,
+  size = "md",
+  fullWidth = false,
 }) => {
-  const myClass = !notSelected
-    ? "bg-primary-700 hover:bg-primary"
-    : "bg-gray-800 border border-primary hover:bg-primary-900";
   return (
     <Button
-      className={`${disabled ? "bg-gray-300" : myClass} ${isForContent ? "" : undefined} ${className}`}
+      variant={notSelected ? "secondary" : "primary"}
+      className={className}
       onClick={onClick}
       type={type}
       disabled={disabled}
+      size={size}
+      fullWidth={fullWidth}
     >
       {content}
     </Button>

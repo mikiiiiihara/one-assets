@@ -75,21 +75,25 @@ const AssetHistory: React.FC<Props> = ({ assetHistories }) => {
         {priceGap.toLocaleString()}({balanceIcon}
         {displayPriceRate}%)
       </p>
-      <StackedArea
-        xData={sortedAssetHistories.map((asset) =>
-          formatDateToJST(asset.createdAt)
-        )}
-        series={series}
-        themeColor={"rgb(82, 231, 171)"}
-        background="#343a40"
-      />
-      <StackedArea
-        xData={sortedAssetHistories.map((asset) =>
-          formatDateToJST(asset.createdAt)
-        )}
-        series={detailSeries}
-        background="#343a40"
-      />
+      <div className="card p-6 mb-6">
+        <StackedArea
+          xData={sortedAssetHistories.map((asset) =>
+            formatDateToJST(asset.createdAt)
+          )}
+          series={series}
+          themeColor={"#1ECC9E"}
+          background="transparent"
+        />
+      </div>
+      <div className="card p-6">
+        <StackedArea
+          xData={sortedAssetHistories.map((asset) =>
+            formatDateToJST(asset.createdAt)
+          )}
+          series={detailSeries}
+          background="transparent"
+        />
+      </div>
     </Center>
   );
 };

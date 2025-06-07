@@ -1,11 +1,11 @@
 import Top from "@components/organisms/top";
-import ProtectedPage from " layouts/protected-page";
+import ProtectedPage from "../../ layouts/protected-page";
 import useUser from "hooks/useUser";
 import { signOut } from "next-auth/react";
 import useCurrentUsdJpy from "@hooks/useCurrentUsdJpy";
 import Portfolio from "@components/organisms/portfolio";
 import { Loading } from "@components/atoms/loading";
-import { AssetsProvider } from " providers/assetsProvider";
+import { AssetsProvider } from "../../ providers/assetsProvider";
 
 export default function Component() {
   // ユーザー情報の取得

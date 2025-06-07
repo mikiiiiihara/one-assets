@@ -1,33 +1,146 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-html,
-body {
-  color: white;
-  background: #343a40;
-  padding: 0;
-  margin: 0;
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    Segoe UI,
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    Fira Sans,
-    Droid Sans,
-    Helvetica Neue,
-    sans-serif;
+
+@layer base {
+  :root {
+    --primary: 30 204 158;
+    --dark: 10 10 10;
+    --dark-surface: 18 18 18;
+    --text-primary: 255 255 255;
+    --text-secondary: 156 163 175;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-dark-950 text-white;
+    padding: 0;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    background-image: radial-gradient(
+      ellipse at top,
+      rgba(30, 204, 158, 0.03) 0%,
+      transparent 50%
+    );
+    min-height: 100vh;
+  }
+
+  ::selection {
+    @apply bg-primary/30 text-white;
+  }
+
+  /* スクロールバーのスタイリング */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-dark-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-dark-600 rounded-full;
+    transition: background-color 0.2s;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-dark-500;
+  }
+}
+
+@layer components {
+  /* カード共通スタイル */
+  .card {
+    @apply bg-dark-900/50 backdrop-blur-sm border border-white/5 rounded-xl;
+    @apply transition-all duration-300;
+  }
+
+  .card:hover {
+    @apply border-primary/20 shadow-glow-sm;
+  }
+
+  /* グラスモーフィズム効果 */
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+
+  /* ネオンテキスト */
+  .text-glow {
+    text-shadow: 0 0 20px rgba(30, 204, 158, 0.5);
+  }
+
+  /* グラデーションテキスト */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent;
+  }
+
+  /* フォーカス状態の共通スタイル */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-dark-950;
+  }
+
+  /* フォーム要素の共通スタイル */
+  .form-input {
+    @apply bg-dark-800/70 border border-white/10 rounded-lg px-4 py-2;
+    @apply text-white placeholder:text-gray-400;
+    @apply transition-all duration-300 focus-ring;
+    @apply hover:border-primary/30 focus:border-primary/50;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-gray-300 mb-2;
+  }
+
+  .form-select {
+    @apply form-input appearance-none cursor-pointer;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+  }
+
+  /* トランジション */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+}
+
+@layer utilities {
+  /* アニメーション */
+  .animate-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-1;
+  }
+
+  /* グリッドレイアウト */
+  .grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+  @apply text-primary-400 no-underline transition-colors duration-200;
+}
+
+a:hover {
+  @apply text-primary-300;
 }
 
 p {
-  font-size: 1.1em;
+  @apply text-gray-300 leading-relaxed;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold text-white;
 }
 
 * {

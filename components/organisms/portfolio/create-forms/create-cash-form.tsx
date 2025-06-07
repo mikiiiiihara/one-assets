@@ -44,32 +44,35 @@ const Component = () => {
     alert(`${name}を追加しました！`);
   };
   return (
-    <form onSubmit={onSumbit}>
-      <div className="mb-4 mt-4">
-        <p className="pb-1">
-          銘柄名：
+    <div className="card p-6">
+      <h3 className="text-xl font-bold gradient-text mb-6">現金資産を追加</h3>
+      <form onSubmit={onSumbit} className="space-y-6">
+        <div>
+          <label className="form-label">銘柄名</label>
           <input
-            className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+            className="form-input w-full"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="例:楽天銀行"
+            placeholder="例: 楽天銀行"
           />
-        </p>
-        <p className="pb-1">
-          総額：¥
+        </div>
+        
+        <div>
+          <label className="form-label">総額 (¥)</label>
           <input
-            className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+            className="form-input w-full"
             type="number"
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
-            placeholder="例:100,000"
+            placeholder="例: 100,000"
           />
-        </p>
-        <p className="pb-1">
-          セクター：
+        </div>
+        
+        <div>
+          <label className="form-label">通貨</label>
           <select
-            className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+            className="form-select w-full"
             value={sector}
             onChange={(e) => setSector(e.target.value)}
           >
@@ -77,15 +80,24 @@ const Component = () => {
             <option value="JPY">JPY</option>
             <option value="USD">USD</option>
           </select>
-        </p>
-      </div>
-      <PrimaryButton
-        className="ml-1"
-        content={!isCreating ? "追加" : "追加中..."}
-        type="submit"
-      />
-      {error && <div className="text-red-500 mt-2">{error}</div>}
-    </form>
+        </div>
+        
+        <div className="flex gap-3 pt-4">
+          <PrimaryButton
+            content={!isCreating ? "追加" : "追加中..."}
+            type="submit"
+            disabled={isCreating}
+            fullWidth
+          />
+        </div>
+        
+        {error && (
+          <div className="bg-danger/10 border border-danger/30 rounded-lg p-3 text-danger text-sm">
+            {error}
+          </div>
+        )}
+      </form>
+    </div>
   );
 };
 

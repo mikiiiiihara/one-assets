@@ -7,7 +7,7 @@ import { Loading } from "@components/atoms/loading";
 import AssetHistory from "@components/organisms/asset-history";
 import { useState } from "react";
 import useAssetHistories from "@hooks/asset-hisotries/useAssetHistories";
-import ProtectedPage from " layouts/protected-page";
+import ProtectedPage from "../ layouts/protected-page";
 import { PrimaryButton } from "@components/molecules/primary-button";
 
 export default function Component() {
@@ -34,31 +34,34 @@ export default function Component() {
   return (
     <ProtectedPage>
       <Top name={user.name ?? ""} signOut={signOut} />
-      <div>
-        <div className="flex flex-col items-center sm:flex-row sm:justify-center sm:space-x-4 space-y-4 sm:space-y-0">
-          <label>
-            Start Date:
+      <div className="card p-6 mb-8">
+        <h2 className="text-xl font-bold gradient-text mb-4">期間フィルター</h2>
+        <div className="flex flex-col md:flex-row gap-4 items-end">
+          <div className="flex-1">
+            <label className="form-label">開始日</label>
             <input
-              className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+              className="form-input w-full"
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
-          </label>
-          <label>
-            End Date:
+          </div>
+          <div className="flex-1">
+            <label className="form-label">終了日</label>
             <input
-              className="bg-[#343a40] border-neutral-600 border rounded m-2 p-1"
+              className="form-input w-full"
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
-          </label>
-          <PrimaryButton
-            className="ml-1"
-            content={"検索"}
-            onClick={handleRefetch}
-          />
+          </div>
+          <div className="flex-shrink-0">
+            <PrimaryButton
+              content="検索"
+              onClick={handleRefetch}
+              size="lg"
+            />
+          </div>
         </div>
       </div>
       <AssetHistory assetHistories={assetHistories} />

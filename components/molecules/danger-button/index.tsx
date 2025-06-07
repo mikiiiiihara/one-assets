@@ -6,26 +6,33 @@ type Props = {
   type?: "submit";
   isForContent?: boolean;
   className?: string;
-  notSelected?: boolean; // 非活性の見た目にしたいときにtrueを指定
+  notSelected?: boolean;
   onClick?: (() => Promise<void>) | (() => void);
+  disabled?: boolean;
+  size?: "sm" | "md" | "lg";
+  fullWidth?: boolean;
 };
+
 const Component: React.FC<Props> = ({
-  content: content,
+  content,
   type,
   isForContent,
-  className,
+  className = "",
   notSelected,
   onClick,
+  disabled,
+  size = "md",
+  fullWidth = false,
 }) => {
   return (
     <Button
-      className={`${
-        !notSelected
-          ? "bg-minus hover:bg-red-300"
-          : "bg-gray-800 border border-minus hover:bg-red-300"
-      } ${isForContent ? "" : undefined} ${className}`}
+      variant={notSelected ? "secondary" : "danger"}
+      className={className}
       onClick={onClick}
       type={type}
+      disabled={disabled}
+      size={size}
+      fullWidth={fullWidth}
     >
       {content}
     </Button>
