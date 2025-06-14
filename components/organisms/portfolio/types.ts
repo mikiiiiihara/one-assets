@@ -20,6 +20,9 @@ export type Detail = {
   balanceRate: number;
   group: string;
   isNoTax: boolean;
+  // Optional properties for specific asset types
+  getPriceTotal?: number; // For cash, japan funds, fixed income assets
+  paymentMonth?: number[]; // For fixed income assets
 };
 
 export type AssetsSummary = {

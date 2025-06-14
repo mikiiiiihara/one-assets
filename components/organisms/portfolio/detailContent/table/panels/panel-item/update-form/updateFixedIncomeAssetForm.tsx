@@ -30,7 +30,7 @@ const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
   const onSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // usdjpyは現在の値を使用（更新しない）
-    const updatedAsset = await updateFixedIncomeAsset(detail.id, getPriceTotal, dividendRate, detail.usdjpy || currentUsdJpy, paymentMonth);
+    const updatedAsset = await updateFixedIncomeAsset(detail.id, getPriceTotal, dividendRate, detail.usdJpy || currentUsdJpy, paymentMonth);
     if (updatedAsset) {
       setAssets((prev) => {
         return prev.map((asset) => {
