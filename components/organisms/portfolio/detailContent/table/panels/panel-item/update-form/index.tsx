@@ -3,6 +3,8 @@ import { Detail } from "@components/organisms/portfolio/types";
 import { UpdateUsStockForm } from "./updateUsStockForm";
 import { UpdateCashForm } from "./updateCashForm";
 import { UpdateJapanFundForm } from "./updateJapanFundForm";
+import { UpdateCryptoForm } from "./updateCryptoForm";
+import { UpdateFixedIncomeAssetForm } from "./updateFixedIncomeAssetForm";
 import useCashes from "@hooks/cashes/useCashes";
 import { Loading } from "@components/atoms/loading";
 import { UpdateJapanStockForm } from "./updateJapanStockForm";
@@ -32,8 +34,12 @@ const Component: FC<Props> = ({ detail, currentUsdJpy }) => {
       return <UpdateCashForm detail={detail} currentUsdJpy={currentUsdJpy} />;
     case "japanFund":
       return <UpdateJapanFundForm detail={detail} cashes={cashes} />;
+    case "crypto":
+      return <UpdateCryptoForm detail={detail} currentUsdJpy={currentUsdJpy} />;
+    case "fixedIncomeAsset":
+      return <UpdateFixedIncomeAssetForm detail={detail} currentUsdJpy={currentUsdJpy} />;
     default:
-      <p>aaaaa</p>;
+      return <p>aaaaa</p>;
   }
 };
 

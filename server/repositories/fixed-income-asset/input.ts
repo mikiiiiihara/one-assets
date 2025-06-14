@@ -6,3 +6,11 @@ export type CreateFixedIncomeAssetInput = {
   paymentMonth: number[];
   userId: string;
 };
+
+export type UpdateFixedIncomeAssetInput = {
+  id: string;
+  getPriceTotal: number;
+  dividendRate: number;
+  usdjpy: number;
+  paymentMonth: number[];
+};

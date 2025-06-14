@@ -4,3 +4,9 @@ export type CreateCryptoInput = {
   quantity: number;
   userId: string;
 };
+
+export type UpdateCryptoInput = {
+  id: string;
+  getPrice: number;
+  quantity: number;
+};
