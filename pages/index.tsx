@@ -1,16 +1,28 @@
+import { signOut, useSession } from "next-auth/react";
+import { Landing } from "@components/organisms/landing";
+
+export default function Component() {
+  const { data: session, status } = useSession();
+
+  // 認証状態をチェック
+  if (status === "loading") return null;
+  if (status === "unauthenticated" || !session) return <Landing />;
+
+  // 認証済みの場合はダッシュボードコンポーネントを表示
+  return <AuthenticatedDashboard />;
+}
+
+// 認証済みユーザー向けのダッシュボードコンポーネント
 import Top from "@components/organisms/top";
-
 import useUser from "hooks/useUser";
-import { signOut } from "next-auth/react";
 import { Loading } from "@components/atoms/loading";
-
 import AssetHistory from "@components/organisms/asset-history";
 import { useState } from "react";
 import useAssetHistories from "@hooks/asset-hisotries/useAssetHistories";
 import ProtectedPage from "../ layouts/protected-page";
 import { PrimaryButton } from "@components/molecules/primary-button";
 
-export default function Component() {
+function AuthenticatedDashboard() {
   const { user, isLoading, error } = useUser();
   const {
     assetHistories,
@@ -56,11 +68,7 @@ export default function Component() {
             />
           </div>
           <div className="flex-shrink-0">
-            <PrimaryButton
-              content="検索"
-              onClick={handleRefetch}
-              size="lg"
-            />
+            <PrimaryButton content="検索" onClick={handleRefetch} size="lg" />
           </div>
         </div>
       </div>

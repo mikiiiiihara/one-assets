@@ -10,7 +10,7 @@ export type LineLoginButtonProps = {
 const Component: React.FC<LineLoginButtonProps> = ({ onClick, text }) => {
   return (
     <Button
-      className="bg-[#06C755] w-[200px] box-border text-white m-1 p-0  hover:bg-[#05a14f] flex items-center transition-colors duration-300"
+      className="!bg-dark-800 w-[200px] box-border !text-white m-1 p-0  hover:!bg-dark-700 flex items-center transition-colors duration-300 !border !border-white/10"
       onClick={onClick}
     >
       <Image

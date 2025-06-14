@@ -10,7 +10,7 @@ export type GoogleLoginButtonProps = {
 const Component: React.FC<GoogleLoginButtonProps> = ({ onClick, text }) => {
   return (
     <Button
-      className="bg-gray-100 box-border w-[200px] p-0 text-black m-1 flex hover:bg-gray-300 items-center justify-start transition-colors duration-300"
+      className="!bg-dark-800 box-border w-[200px] p-0 !text-white m-1 flex hover:!bg-dark-700 items-center justify-start transition-colors duration-300 !border !border-white/10"
       onClick={onClick}
     >
       <FcGoogle size={44} className="border-r border-line mr-2 justify-start" />

@@ -4,7 +4,7 @@ import React from "react";
 
 export type Props = {
   name: string;
-  signOut: () => void;
+  signOut: (options?: { callbackUrl?: string }) => void;
 };
 
 const Top: React.FC<Props> = ({ name, signOut }) => {
@@ -24,7 +24,7 @@ const Top: React.FC<Props> = ({ name, signOut }) => {
             <p className="text-gray-400 text-sm">{name}としてログイン中</p>
           </div>
         </div>
-        
+
         <nav className="flex gap-3">
           <Button
             variant={isAssetHistoryPage ? "primary" : "ghost"}
@@ -40,7 +40,7 @@ const Top: React.FC<Props> = ({ name, signOut }) => {
           </Button>
           <Button
             variant="secondary"
-            onClick={() => signOut()}
+            onClick={() => signOut({ callbackUrl: "/" })}
           >
             ログアウト
           </Button>
