@@ -4,8 +4,10 @@ import {
   fetchUsStockDividend,
   fetchUsStockPrices,
 } from "@server/adapters/us-stock/us-stock.adapter";
+import { UsStockDividendItem } from "@server/adapters/us-stock/responses";
 import { stringToDate } from "@server/utils/date";
 import { CreateUsStockInput, UpdateUsStockInput } from "./input";
+import { Prisma } from "@prisma/client";
 
 export const List = async (
   userId: string,
@@ -84,9 +86,12 @@ export const Get = async (id: string): Promise<UsStockModel | null> => {
 };
 
 export const Create = async (
-  data: CreateUsStockInput
-): Promise<UsStockModel> => {
-  const newStock = await prismaClient.usStock.create({
+  data: CreateUsStockInput,
+  prisma: Prisma.TransactionClient | typeof prismaClient = prismaClient
+): Promise<
+  Omit<UsStockModel, "currentPrice" | "priceGets" | "currentRate" | "dividends">
+> => {
+  const newStock = await prisma.usStock.create({
     data: {
       code: data.code,
       getPrice: data.getPrice,
@@ -106,24 +111,17 @@ export const Create = async (
       isNoTax: true,
     },
   });
-  // 株価情報を取得
-  const usStockMarketPrices = await fetchUsStockPrices([newStock.code]);
-  // 配当情報を取得
-  const usStockDividend = await fetchUsStockDividend(newStock.code);
-  return {
-    ...newStock,
-    currentPrice: usStockMarketPrices[0].price,
-    priceGets: usStockMarketPrices[0].change,
-    currentRate: usStockMarketPrices[0].changesPercentage,
-    dividends: mapAnnualDividends(usStockDividend.historical),
-  };
+  return newStock;
 };
 
 export const Update = async (
-  input: UpdateUsStockInput
-): Promise<UsStockModel> => {
+  input: UpdateUsStockInput,
+  prisma: Prisma.TransactionClient | typeof prismaClient = prismaClient
+): Promise<
+  Omit<UsStockModel, "currentPrice" | "priceGets" | "currentRate" | "dividends">
+> => {
   const { id, quantity, getPrice, usdjpy } = input;
-  const updatedStock = await prismaClient.usStock.update({
+  const updatedStock = await prisma.usStock.update({
     where: { id },
     data: {
       quantity,
@@ -141,22 +139,15 @@ export const Update = async (
     },
   });
 
-  // 株価情報を取得
-  const usStockMarketPrices = await fetchUsStockPrices([updatedStock.code]);
-  // 配当情報を取得
-  const usStockDividend = await fetchUsStockDividend(updatedStock.code);
-  return {
-    ...updatedStock,
-    currentPrice: usStockMarketPrices[0].price,
-    priceGets: usStockMarketPrices[0].change,
-    currentRate: usStockMarketPrices[0].changesPercentage,
-    dividends: mapAnnualDividends(usStockDividend.historical),
-  };
+  return updatedStock;
 };
 
-export const Delete = async (id: string): Promise<UsStockModel> => {
+export const Delete = async (
+  id: string,
+  prisma: Prisma.TransactionClient | typeof prismaClient = prismaClient
+): Promise<UsStockModel> => {
   // delete the stock
-  const deletedUsStock = await prismaClient.usStock.delete({
+  const deletedUsStock = await prisma.usStock.delete({
     where: { id },
     select: {
       id: true,
@@ -174,6 +165,28 @@ export const Delete = async (id: string): Promise<UsStockModel> => {
     priceGets: 0,
     currentRate: 0,
     dividends: [],
+  };
+};
+
+/**
+ * 株価情報と配当情報を取得して、UsStockModelの完全な情報を返す
+ */
+export const FetchMarketData = async (
+  stock: Omit<
+    UsStockModel,
+    "currentPrice" | "priceGets" | "currentRate" | "dividends"
+  >
+): Promise<UsStockModel> => {
+  // 株価情報を取得
+  const usStockMarketPrices = await fetchUsStockPrices([stock.code]);
+  // 配当情報を取得
+  const usStockDividend = await fetchUsStockDividend(stock.code);
+  return {
+    ...stock,
+    currentPrice: usStockMarketPrices[0].price,
+    priceGets: usStockMarketPrices[0].change,
+    currentRate: usStockMarketPrices[0].changesPercentage,
+    dividends: mapAnnualDividends(usStockDividend.historical),
   };
 };
 

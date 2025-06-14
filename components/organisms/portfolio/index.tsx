@@ -179,7 +179,7 @@ const Portfolio: React.FC<Props> = ({ currentUsdJpy }) => {
       <StackedColumn
         divData={divData}
         themeColor={themeDefault}
-        background="#343a40"
+        background="rgba(10, 10, 10, 0.95)"
       />
     </Center>
   );

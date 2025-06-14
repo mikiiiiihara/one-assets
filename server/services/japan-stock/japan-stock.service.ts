@@ -7,6 +7,7 @@ import {
   Create,
   Delete,
   Update,
+  FetchMarketData,
 } from "@server/repositories/stock/jp/japan-stock.repository";
 import prismaClient from "@server/lib/prisma-client";
 import {
@@ -25,12 +26,13 @@ import { JapanStockModel } from "@server/repositories/stock/jp/japan-stock.model
 export const createJapanStock = async (
   input: CreateJapanStockInput
 ): Promise<JapanStockModel> => {
-  return await prismaClient.$transaction(async (prisma) => {
-    const newStock = await Create(input);
+  // トランザクション内でDBの処理のみを行う
+  const newStock = await prismaClient.$transaction(async (prisma) => {
+    const createdStock = await Create(input, prisma);
 
     // cashIdが連携されている場合、cashの更新を行う
     if (input.cashId) {
-      const cash = await Get(input.cashId);
+      const cash = await Get(input.cashId, prisma);
       if (cash == null) throw new Error("Cash not found");
 
       // cashIdとchangedPriceは両方揃っているはずなので、changedPriceが0&nullの場合はエラー
@@ -43,11 +45,25 @@ export const createJapanStock = async (
         id: cash.id,
         price: cash.price - input.changedPrice,
       };
-      await UpdateCash(updateCashInput);
+      await UpdateCash(updateCashInput, prisma);
     }
 
-    return newStock;
+    return createdStock;
   });
+
+  // トランザクション外でAPI呼び出しを行う
+  try {
+    return await FetchMarketData(newStock);
+  } catch (error) {
+    // APIエラーが発生してもDB処理は成功しているので、最低限の情報を返す
+    console.error("Failed to fetch market data:", error);
+    return {
+      ...newStock,
+      currentPrice: newStock.getPrice,
+      priceGets: 0,
+      currentRate: 0,
+    };
+  }
 };
 
 /**
@@ -59,12 +75,13 @@ export const createJapanStock = async (
 export const updateJapanStock = async (
   input: UpdateJapanStockInput
 ): Promise<JapanStockModel> => {
-  return await prismaClient.$transaction(async (prisma) => {
-    const newStock = await Update(input);
+  // トランザクション内でDBの処理のみを行う
+  const updatedStock = await prismaClient.$transaction(async (prisma) => {
+    const stock = await Update(input, prisma);
 
     // cashIdが連携されている場合、cashの更新を行う
     if (input.cashId) {
-      const cash = await Get(input.cashId);
+      const cash = await Get(input.cashId, prisma);
       if (cash == null) throw new Error("Cash not found");
 
       // cashIdとchangedPriceは両方揃っているはずなので、changedPriceが0&nullの場合はエラー
@@ -77,20 +94,34 @@ export const updateJapanStock = async (
         id: cash.id,
         price: cash.price - input.changedPrice,
       };
-      await UpdateCash(updateCashInput);
+      await UpdateCash(updateCashInput, prisma);
     }
 
-    return newStock;
+    return stock;
   });
+
+  // トランザクション外でAPI呼び出しを行う
+  try {
+    return await FetchMarketData(updatedStock);
+  } catch (error) {
+    // APIエラーが発生してもDB処理は成功しているので、最低限の情報を返す
+    console.error("Failed to fetch market data:", error);
+    return {
+      ...updatedStock,
+      currentPrice: updatedStock.getPrice,
+      priceGets: 0,
+      currentRate: 0,
+    };
+  }
 };
 export const deleteJapanStock = async (
   input: DeleteJapanStockInput
 ): Promise<JapanStockModel> => {
   return await prismaClient.$transaction(async (prisma) => {
-    const deletedStock = await Delete(input.id);
+    const deletedStock = await Delete(input.id, prisma);
     // cashIdが連携されている場合、cashの更新を行う
     if (input.cashId) {
-      const cash = await Get(input.cashId);
+      const cash = await Get(input.cashId, prisma);
       if (cash == null) throw new Error("Cash not found");
 
       // cashIdとchangedPriceは両方揃っているはずなので、changedPriceが0&nullの場合はエラー
@@ -103,7 +134,7 @@ export const deleteJapanStock = async (
         id: cash.id,
         price: cash.price + input.changedPrice,
       };
-      await UpdateCash(updateCashInput);
+      await UpdateCash(updateCashInput, prisma);
     }
     return deletedStock;
   });

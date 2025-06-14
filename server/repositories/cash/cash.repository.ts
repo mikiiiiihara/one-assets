@@ -1,6 +1,8 @@
 import prismaClient from "@server/lib/prisma-client";
 import { CreateCashInput, UpdateCashInput } from "./input";
 import { CashModel } from "./cash.model";
+import { Prisma } from "@prisma/client";
+import { DefaultArgs } from "@prisma/client/runtime/library";
 
 export const List = async (userId: string): Promise<CashModel[]> => {
   const cachData = await prismaClient.cash.findMany({
@@ -21,8 +23,11 @@ export const List = async (userId: string): Promise<CashModel[]> => {
   return cachData;
 };
 
-export const Get = async (id: string): Promise<CashModel | null> => {
-  const cash = await prismaClient.cash.findUnique({
+export const Get = async (
+  id: string,
+  prisma: Prisma.TransactionClient | typeof prismaClient = prismaClient
+): Promise<CashModel | null> => {
+  const cash = await prisma.cash.findUnique({
     where: { id },
     select: {
       id: true,
@@ -54,9 +59,12 @@ export const Create = async (data: CreateCashInput): Promise<CashModel> => {
   return newCash;
 };
 
-export const Update = async (input: UpdateCashInput): Promise<CashModel> => {
+export const Update = async (
+  input: UpdateCashInput,
+  prisma: Prisma.TransactionClient | typeof prismaClient = prismaClient
+): Promise<CashModel> => {
   const { id, price } = input;
-  const updatedCash = await prismaClient.cash.update({
+  const updatedCash = await prisma.cash.update({
     where: { id },
     data: {
       price,

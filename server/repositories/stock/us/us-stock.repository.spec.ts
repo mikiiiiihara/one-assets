@@ -2,6 +2,10 @@ import * as PrismaClient from "@server/lib/prisma-client";
 import { Create, Get, List } from "./us-stock.repository";
 import * as UsStockAdapter from "@server/adapters/us-stock/us-stock.adapter";
 import { UsStockModel } from "./us-stock.model";
+import {
+  UsStockDividend,
+  UsStockMarketPrice,
+} from "@server/adapters/us-stock/responses";
 
 // モックのセットアップを行う
 jest.mock("@server/lib/prisma-client", () => ({
@@ -227,8 +231,6 @@ describe("UsStockRepository", () => {
       const mockStock = mockStocks[0];
 
       mockCreate.mockResolvedValue(mockStock);
-      mockFetchPrices.mockResolvedValue(mockUsStockMarketPrices);
-      mockFetchDividends.mockResolvedValue(mockUsStockDividend);
 
       const result = await Create({
         code: "AAPL",
@@ -239,7 +241,17 @@ describe("UsStockRepository", () => {
         userId: "user1",
         isNoTax: false,
       });
-      expect(result).toEqual(expectedStock);
+      
+      // Create now returns without market data
+      expect(result).toEqual({
+        id: "1",
+        code: "AAPL",
+        getPrice: 150,
+        quantity: 10,
+        sector: "Technology",
+        usdjpy: 110,
+        isNoTax: false,
+      });
     });
   });
 });

@@ -2,6 +2,7 @@ import prismaClient from "@server/lib/prisma-client";
 import { JapanStockModel } from "./japan-stock.model";
 import { CreateJapanStockInput, UpdateJapanStockInput } from "./input";
 import { fetchJapanStockPrices } from "@server/adapters/yahoo-finance/stock/stock.adapter";
+import { Prisma } from "@prisma/client";
 
 export const List = async (userId: string): Promise<JapanStockModel[]> => {
   const japanStocks = await prismaClient.japanStock.findMany({
@@ -40,9 +41,12 @@ export const List = async (userId: string): Promise<JapanStockModel[]> => {
 };
 
 export const Create = async (
-  data: CreateJapanStockInput
-): Promise<JapanStockModel> => {
-  const newStock = await prismaClient.japanStock.create({
+  data: CreateJapanStockInput,
+  prisma: Prisma.TransactionClient | typeof prismaClient = prismaClient
+): Promise<
+  Omit<JapanStockModel, "currentPrice" | "priceGets" | "currentRate">
+> => {
+  const newStock = await prisma.japanStock.create({
     data: {
       code: data.code,
       name: data.name,
@@ -65,17 +69,16 @@ export const Create = async (
     },
   });
 
-  const marketPrice = await buildJapanStockMarketPrice(newStock.code);
-  return {
-    ...newStock,
-    ...marketPrice,
-  };
+  return newStock;
 };
 
 export const Update = async (
-  input: UpdateJapanStockInput
-): Promise<JapanStockModel> => {
-  const updatedStock = await prismaClient.japanStock.update({
+  input: UpdateJapanStockInput,
+  prisma: Prisma.TransactionClient | typeof prismaClient = prismaClient
+): Promise<
+  Omit<JapanStockModel, "currentPrice" | "priceGets" | "currentRate">
+> => {
+  const updatedStock = await prisma.japanStock.update({
     where: { id: input.id },
     data: {
       name: input.name,
@@ -95,15 +98,14 @@ export const Update = async (
     },
   });
 
-  const marketPrice = await buildJapanStockMarketPrice(updatedStock.code);
-  return {
-    ...updatedStock,
-    ...marketPrice,
-  };
+  return updatedStock;
 };
 
-export const Delete = async (id: string): Promise<JapanStockModel> => {
-  const deletedStock = await prismaClient.japanStock.delete({
+export const Delete = async (
+  id: string,
+  prisma: Prisma.TransactionClient | typeof prismaClient = prismaClient
+): Promise<JapanStockModel> => {
+  const deletedStock = await prisma.japanStock.delete({
     where: { id },
     select: {
       id: true,
@@ -131,5 +133,18 @@ const buildJapanStockMarketPrice = async (code: string) => {
     currentPrice: japanStockPrice.price,
     priceGets,
     currentRate: (priceGets / japanStockPrice.previousClosePrice) * 100,
+  };
+};
+
+/**
+ * 株価情報を取得して、JapanStockModelの完全な情報を返す
+ */
+export const FetchMarketData = async (
+  stock: Omit<JapanStockModel, "currentPrice" | "priceGets" | "currentRate">
+): Promise<JapanStockModel> => {
+  const marketPrice = await buildJapanStockMarketPrice(stock.code);
+  return {
+    ...stock,
+    ...marketPrice,
   };
 };

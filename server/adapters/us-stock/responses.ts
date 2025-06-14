@@ -1,4 +1,4 @@
-type UsStockMarketPrice = {
+export type UsStockMarketPrice = {
   symbol: string; // ティッカー名
   name: string;
   price: number; // 現実価格
@@ -23,12 +23,12 @@ type UsStockMarketPrice = {
   timestamp: number;
 };
 
-type UsStockDividend = {
+export type UsStockDividend = {
   symbol: string;
   historical: UsStockDividendItem[];
 };
 
-type UsStockDividendItem = {
+export type UsStockDividendItem = {
   date: string;
   label: string;
   adjDividend: number;
