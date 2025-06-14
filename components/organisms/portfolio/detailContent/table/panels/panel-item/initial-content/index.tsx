@@ -55,8 +55,8 @@ const Component: FC<Props> = ({ detail, rate, displayType }) => {
         </p>
         <p className="pb-1">
           損益額：
-          <span className={balance > 0 ? "text-plus" : "text-minus"}>
-            ¥{balance.toLocaleString()}({detail.balanceRate}%)
+          <span className={balance > 0 ? "text-plus" : balance < 0 ? "text-minus" : ""}>
+            {balance > 0 ? "+" : ""}¥{balance.toLocaleString()}({detail.balanceRate > 0 ? "+" : ""}{Math.round(detail.balanceRate * 100) / 100}%)
           </span>
         </p>
         {detail.sector !== "japanFund" && detail.sector !== "crypto" ? (

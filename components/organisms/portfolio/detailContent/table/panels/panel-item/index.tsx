@@ -60,10 +60,15 @@ const AssetPanelItemComponent: FC<Props> = ({
           data.group == "crypto" ||
           data.group == "japanStock" ||
           data.group == "usStock" ? (
-            <p className={data.balance > 0 ? "text-plus" : "text-minus"}>
-              {data.balance > 0 ? "+" : ""}
-              {data.balance.toLocaleString()}({data.balanceRate}%)
-            </p>
+            <div>
+              <p className={data.priceRate > 0 ? "text-plus" : data.priceRate < 0 ? "text-minus" : ""}>
+                株価変化率: {data.priceRate > 0 ? "+" : ""}{Math.round(data.priceRate * 100) / 100}%
+              </p>
+              <p className={data.balance > 0 ? "text-plus" : data.balance < 0 ? "text-minus" : ""}>
+                損益: {data.balance > 0 ? "+" : ""}
+                ¥{data.balance.toLocaleString()}({Math.round(data.balanceRate * 100) / 100}%)
+              </p>
+            </div>
           ) : (
             <></>
           )}
