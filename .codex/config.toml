@@ -1,0 +1,6 @@
+# 推論モードを高品質に設定
+model_reasoning_effort = "high"
+
+# Web検索を有効化
+[tools]
+web_research = true
